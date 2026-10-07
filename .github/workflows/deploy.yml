@@ -1,0 +1,57 @@
+# main 브랜치에 올리면 GitHub Pages 로 자동 배포합니다.
+# (처음 한 번만: 저장소 Settings → Pages → Source 를 "GitHub Actions" 로 바꿔 주세요)
+name: Deploy to GitHub Pages
+
+on:
+  push:
+    branches: [main]
+    # 사이트에 올라가지 않는 파일만 바뀌었을 때는 배포하지 않음
+    paths-ignore:
+      - 'README.md'
+      - 'samples/**'
+      - 'extras/**'
+      - '.gitignore'
+  # Actions 탭에서 "Run workflow" 로 직접 실행
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# 배포가 겹치면 뒤의 것이 앞의 것이 끝나기를 기다림
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: 저장소 내려받기
+        uses: actions/checkout@v4
+
+      - name: 올리기 전 점검 (문법 오류가 있으면 여기서 멈춤)
+        run: node tools/check.js
+
+      - name: 공개할 파일만 모으기
+        run: |
+          mkdir -p _site
+          cp index.html 404.html _site/
+          cp -r logo _site/logo
+          touch _site/.nojekyll
+
+      - name: Pages 준비
+        uses: actions/configure-pages@v5
+
+      - name: 올릴 묶음 만들기
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: _site
+
+      - name: 배포
+        id: deployment
+        uses: actions/deploy-pages@v5
