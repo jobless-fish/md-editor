@@ -1,4 +1,10 @@
 <!doctype html>
+<!--
+  MD Editor  https://jobless-fish.github.io/md-editor/
+  Copyright (c) 2026 jobless-fish. All rights reserved.
+  이 파일의 코드, 디자인, 로고를 허락 없이 복제, 수정, 재배포할 수 없습니다. 자세한 내용은 저장소의 LICENSE 파일을 보세요.
+  This file's code, design, and logo may not be copied, modified, or redistributed without permission. See the LICENSE file in the repository.
+-->
 <html lang="ko">
 <head>
 <meta charset="utf-8">
@@ -493,6 +499,8 @@ html.intro-out .intro{pointer-events:none}
   .intro{--w:min(68vw, 100vh)}
   .intro-hint{margin-top:calc(var(--w) * 0.14187 + 22px)}
 }
+/* 맨 아래 저작권 표시 */
+.foot{padding:16px 16px 22px;text-align:center;font-size:12px;color:var(--muted);letter-spacing:0}
 /* 언어 고르기 (KR / EN) : 알약 모양 바탕 위에서 흰 손잡이가 고른 쪽으로 미끄러짐 */
 .lang{position:relative;display:inline-grid;grid-template-columns:1fr 1fr;flex:none;margin-left:auto;padding:2px;border-radius:999px;background:#dad7cd;box-shadow:inset 0 1px 2px rgba(40,35,20,.16)}
 .lang::before{content:"";position:absolute;top:2px;bottom:2px;left:2px;width:calc(50% - 2px);border-radius:999px;background:#fff;box-shadow:0 1px 3px rgba(40,35,20,.3),0 0 0 .5px rgba(40,35,20,.06);transition:transform .22s cubic-bezier(.3,.7,.3,1)}
@@ -771,6 +779,8 @@ html.lang-en .md pre.raw-md::before{content:"Raw HTML · saved as-is"}
     <div class="note">코드를 여기서 직접 고쳐도 왼쪽 편집 칸에 바로 반영됩니다. 깃허브는 글자 크기와 색 지정을 지원하지 않으며, 크기는 제목 단계로 조절됩니다.</div>
   </section>
 </main>
+
+<footer class="foot">© 2026 jobless-fish · All rights reserved</footer>
 
 <!-- 도형 그리기 화면 -->
 <div class="dg" id="dg" hidden>

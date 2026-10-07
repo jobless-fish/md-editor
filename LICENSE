@@ -1,0 +1,89 @@
+MD Editor
+Copyright (c) 2026 jobless-fish. All rights reserved.
+
+================================================================
+한국어
+================================================================
+
+이 저장소에 있는 소스 코드, 화면 디자인, 로고, 문서(이하 "이 소프트웨어")의
+저작권은 저작권자(jobless-fish)에게 있습니다. 이 소프트웨어는 오픈 소스가
+아닙니다.
+
+1. 허용되는 것
+
+   - https://jobless-fish.github.io/md-editor/ 에서 이 도구를 무료로 사용하는 것
+   - 이 도구로 만든 문서와 머메이드 코드를 자유롭게 사용하는 것.
+     이 도구로 만든 결과물의 권리는 그것을 만든 사용자에게 있으며,
+     저작권자는 결과물에 대해 어떤 권리도 주장하지 않습니다.
+     (결과물에 들어가는 "%% mdpaint:" 주석 줄도 결과물의 일부입니다.)
+   - GitHub 서비스 약관이 정한 범위에서 이 저장소를 보고 포크하는 것
+
+2. 저작권자의 사전 서면 허락 없이는 할 수 없는 것
+
+   - 이 소프트웨어의 전부 또는 일부를 복제, 수정, 배포하는 것
+   - 이 소프트웨어를 다른 웹사이트나 서비스에 올려 제공하는 것
+   - 이 소프트웨어를 바탕으로 다른 제품이나 서비스를 만드는 것
+   - 이 소프트웨어를 판매하거나 그 밖의 상업적 목적으로 이용하는 것
+   - 저작권 표시를 지우거나 바꾸는 것
+   - "MD Editor" 이름과 로고를 자신의 제품이나 서비스에 사용하는 것
+
+3. 문의
+
+   사용 허락이 필요하면 이 저장소의 Issues 로 문의해 주세요.
+   https://github.com/jobless-fish/md-editor/issues
+
+4. 보증의 부인
+
+   이 소프트웨어는 "있는 그대로" 제공되며, 명시적이든 묵시적이든 어떠한
+   보증도 하지 않습니다. 저작권자는 이 소프트웨어의 사용으로 생긴 손해에
+   대해 책임을 지지 않습니다.
+
+================================================================
+English
+================================================================
+
+The source code, visual design, logo, and documentation in this repository
+(the "Software") are the copyrighted work of jobless-fish. The Software is
+not open source.
+
+1. What you may do
+
+   - Use the tool free of charge at https://jobless-fish.github.io/md-editor/
+   - Freely use the documents and Mermaid code you create with the tool.
+     Output created with the tool belongs to the user who created it, and
+     the copyright holder claims no rights in that output. (The
+     "%% mdpaint:" comment line placed in the output is part of the output.)
+   - View and fork this repository to the extent provided by the GitHub
+     Terms of Service
+
+2. What you may not do without prior written permission
+
+   - Copy, modify, or distribute the Software, in whole or in part
+   - Host or offer the Software on another website or service
+   - Create another product or service based on the Software
+   - Sell the Software or otherwise use it for commercial purposes
+   - Remove or alter the copyright notices
+   - Use the "MD Editor" name or logo for your own product or service
+
+3. Contact
+
+   To request permission, please open an issue in this repository.
+   https://github.com/jobless-fish/md-editor/issues
+
+4. Disclaimer of warranty
+
+   THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+   IMPLIED. IN NO EVENT SHALL THE COPYRIGHT HOLDER BE LIABLE FOR ANY CLAIM,
+   DAMAGES, OR OTHER LIABILITY ARISING FROM THE USE OF THE SOFTWARE.
+
+================================================================
+Third-party software / 다른 사람이 만든 소프트웨어
+================================================================
+
+Diagram previews are rendered with Mermaid (https://mermaid.js.org), which is
+loaded in the browser from a public CDN and is not included in this
+repository. Mermaid is licensed under the MIT License by its authors.
+
+그림 미리보기는 머메이드(https://mermaid.js.org)로 그립니다. 머메이드는
+브라우저가 공개 CDN 에서 불러오며 이 저장소에는 들어 있지 않습니다.
+머메이드는 그 제작자들이 MIT 라이선스로 배포합니다.

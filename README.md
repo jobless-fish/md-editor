@@ -177,6 +177,15 @@
 
 버그나 바라는 기능은 이 저장소의 [Issues](../../issues)에 남겨 주세요. 개발과 배포에 관한 내용은 [README_DEV.md](README_DEV.md)에 있습니다.
 
+## 저작권
+
+© 2026 jobless-fish. All rights reserved.
+
+- 사이트에서 이 도구를 쓰는 것은 무료이고, 이 도구로 만든 문서와 머메이드 코드는 만든 분의 것입니다. 자유롭게 쓰세요.
+- 이 저장소의 코드, 디자인, 로고는 허락 없이 복제, 수정, 재배포하거나 다른 사이트에 올릴 수 없습니다.
+
+자세한 내용은 [LICENSE](LICENSE)에 있습니다.
+
 ---
 
 <a id="english"></a>
@@ -357,3 +366,12 @@ That can happen when GitHub's Mermaid version differs from the preview. Click th
 ## Feedback
 
 Please report bugs and feature requests in this repository's [Issues](../../issues). Development and deployment notes are in [README_DEV.md](README_DEV.md) (Korean).
+
+## Copyright
+
+© 2026 jobless-fish. All rights reserved.
+
+- Using the tool on the site is free, and the documents and Mermaid code you create with it are yours to use freely.
+- The code, design, and logo in this repository may not be copied, modified, redistributed, or hosted elsewhere without permission.
+
+See [LICENSE](LICENSE) for details.

@@ -9,6 +9,7 @@ on:
     paths-ignore:
       - 'README.md'
       - 'README_DEV.md'
+      - 'LICENSE'
       - 'docs/**'
       - 'samples/**'
       - 'extras/**'
