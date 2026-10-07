@@ -21,7 +21,7 @@
 
 ## 3단계로 시작하기
 
-1. [사이트](https://jobless-fish.github.io/md-editor/)를 열고 첫 화면을 누릅니다.
+1. [사이트](https://jobless-fish.github.io/md-editor/)를 열고, 로고 애니메이션이 끝나면 화면을 누릅니다.
 2. 왼쪽 **편집** 칸에 글을 쓰고, 위쪽 도구모음으로 서식과 그림을 넣습니다.
 3. 도구모음 오른쪽의 **코드 복사**를 눌러 깃허브의 README 편집 화면에 붙여 넣습니다.
 
@@ -202,7 +202,7 @@
 
 ## Get started in 3 steps
 
-1. Open [the site](https://jobless-fish.github.io/md-editor/?lang=en) and click the first screen.
+1. Open [the site](https://jobless-fish.github.io/md-editor/?lang=en) and click the screen once the logo animation finishes.
 2. Write in the **Edit** pane on the left, and use the toolbar above for formatting and diagrams.
 3. Click **Copy code** at the right end of the toolbar and paste it into the README editor on GitHub.
 
