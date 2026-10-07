@@ -8,6 +8,8 @@ on:
     # 사이트에 올라가지 않는 파일만 바뀌었을 때는 배포하지 않음
     paths-ignore:
       - 'README.md'
+      - 'README_DEV.md'
+      - 'docs/**'
       - 'samples/**'
       - 'extras/**'
       - '.gitignore'

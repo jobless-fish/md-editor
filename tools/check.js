@@ -49,5 +49,24 @@ for (const f of PAGES) {
   ok('크기 ' + (fs.statSync(p).size / 1024).toFixed(0) + ' KB');
 }
 
+// 영어 번역이 빠진 글자가 없는지: 스크립트에서 __('한국어') 로 쓴 원문이 모두 EN 표에 있어야 합니다
+{
+  console.log('3) 영어 번역');
+  const html = fs.readFileSync(path.join(root, 'index.html'), 'utf8');
+  const table = html.match(/\nconst EN = \{\n([\s\S]*?)\n\};/);
+  if (!table) fail('index.html 에서 EN 표를 찾지 못했습니다');
+  else {
+    const STR = "'(?:[^'\\\\]|\\\\.)*'";
+    const keys = new Set([...table[1].matchAll(new RegExp('^  (' + STR + '): ', 'gm'))].map(m => m[1]));
+    const used = new Set([...html.matchAll(new RegExp('__\\((' + STR + ')', 'g'))].map(m => m[1]));
+    const missing = [...used].filter(k => !keys.has(k));
+    if (missing.length) fail('EN 표에 없는 원문 ' + missing.length + '개: ' + missing.slice(0, 5).join(' , '));
+    else ok('원문 ' + used.size + '개 모두 영어 있음');
+    const bare = [...html.matchAll(/\b(?:toast|prompt)\(\s*'[^']*[가-힣]/g)].length;
+    if (bare) fail('__() 로 감싸지 않은 한국어 알림이 ' + bare + '곳 있습니다');
+    else ok('감싸지 않은 한국어 알림 없음');
+  }
+}
+
 if (bad) { console.error('\n점검 실패: ' + bad + '건. 배포하지 않습니다.'); process.exit(1); }
 console.log('\n점검 통과');

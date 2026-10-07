@@ -3,6 +3,22 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<script>
+/* 언어 정하기: 주소의 ?lang=en|ko → 지난번에 고른 것 → 브라우저 언어(한국어가 아니면 영어). 화면을 그리기 전에 정해 둔다 */
+(function(){
+  var d = document.documentElement, l = null, q = null;
+  try{ q = (location.search.match(/[?&]lang=(ko|en)\b/i) || [])[1]; }catch(e){}
+  if(q) q = q.toLowerCase();
+  try{
+    if(q) localStorage.setItem('mdpaint.lang', q);
+    l = q || localStorage.getItem('mdpaint.lang');
+  }catch(e){ l = q; }
+  if(l !== 'ko' && l !== 'en') l = /^ko\b/i.test(navigator.language || '') ? 'ko' : 'en';
+  window.MD_LANG = l;
+  d.lang = l;
+  d.classList.add('lang-' + l);
+})();
+</script>
 <title>MD Editor - 깃허브용 마크다운 에디터</title>
 <link rel="icon" type="image/png" sizes="64x64" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAYAAACqaXHeAAAHFUlEQVR4nOyaaUwVVxTH/8PDDdxaBcUFkFopFsS6QF2iiQ3udW+LtlYaaVwARbR+KUZBDakfqlBAFFTUplKwYIKKSzV+UBATU1AWUywRG0EgwQ1l9/WeayH45s6DeYtNHX7Jy9w5d+68uWfOvefcc8cWGscWGqdLAdA4XQqAxulSADROlwKgcWQK8Pb2XAzYsB8+lCR4sGMv/L+p0+tRzI6F7Jh269atzPaVUmthzJgx9qzDSeznj7cYvV5/sKmpZXNRUVEtnXMFeHl5TbKxwc+SJLlBAzAllL58ia9u376dY0MC1vlVWuk8QX2lPvMyG/MzJcnmPDQIs4I5tkwb60WVo0ePhp2dnUze1NSE/Px8WIKBAwfC1dVVJn/y5AlKSkp4ecKECa/V1dc3oKamBo8e1aCurg7mYGOjX0tewFVUuX17BEaNGiVsuHLllygoKIC57N4dBR8fH5l8585IroCePXsiMfGQYvvS0lKcPXsGp09norKyEibgyuYAyRUqWb8+CObi6+sr7PyDBw9w6lRGZ24BNzc3BAeHICvrPLZt247+/ftDHRIpAP3ElXrFZpMmTSbPAXPYuHGTUL53749sbL6EGtgwxpIlS3DmTBYWLFigpmk/G5jI2rXrYCp+fn7w8PCQyQsLC3Dp0u8YPnw4P2fuCmqgOSsiYidCQ8M63cbkUHjy5CncCpgvhVo2bAgVyuntE2vWrEV4+PdoaGjAgQMJr13To0cPODs7w9PTC46OjsL7rFq1CkOGOGHr1u/QEWatBcgKgoLWq2qzbNlnGDZsmEx+7do13Lx5k4Xi3pgyZWqbPCFhv+K9vL3HsglzV5vFtMfPbyYCA/9EUlIijGHyECBaraCzdO/eXXHo7Nv36u2Hhm5CZ8nPz8Py5V/wo4igoGDhRNseIwqQ0BnWreu8Baxc+TUGDBggk2dlncXdu3f5w44d+xHU8Pz5c+aV1vH2InbsiIROp1Nsb5YFEOQRPD09O7yub9++WL06UCZvaWlBbOxPvBwSsgGm8OLFC2zZEib0Hk5OTli4cJFiWyMKkM/AZWVlwis7YwWBgd+iVy/5yjo19VeUl5dj6tSpfGIzFXo2pfghMDBQsZ0qC6Do7OLFizI5zQXGrMDBwRH+/stlcgplWye54GDT3n574uJiuecwxMlpCH9GEaqHQHx8rNDUjEWHISEh6Natm0x+7NhRPH36FDNmfAJ3d3eYC60RUlJOCOuUJkPVCrh37x6PvQ1RmgucnV0wb958mZwWPMnJR3gUR+GspRBZKOHj4yuUq/IC0r8iMjVaFRoisoKwsM1s1SX/Gwpw6uvrMXv2bIwYMQKWoqKiXCindYMIk7xAVVUVTp5Mk8kNrYAClenTpwvaVyItLZWXJ0407qfVQsOgublZJqcIkuIQQ1R5gfahuVKEtWjR4rbypk3imDw6Olr4kJaCVpQiyBUbYtIQIEjThw4lya5JT/+NH6dNm87DWkPIk1DgY00kSUkurzArEKJJ7NmzZ23nly9fAsu28j8KCxO//ZiYfapXeWqg+Wbo0GHCuurqavn1MIPa2locPZrMy+QaY2KieXn+/PlwcXGVXZ+X9weuXr0Ka+Li4iIMfcndijA7FD5+/BgeP37MXSNFY7a2topubc+eH2BtRDlGojXHaIjZW2ONjY3Yvz8OV65c4ecU8Tk6DpJdR8OjuLgY1oaWwSJyc68L5UYUYNwLtCc1NbWtTNZAGdt33nn3tWto5rc29PbnzJkrrLt+PUcoN3sItIfC2ZEj38fSpUv5fFBb+2qCTE9Px/37ZbA2SrkGil6VMlcW2x12d/+ApbCT0KdPH5aY/JRFi3EsBJ6LgIBvcOLEL7A2bm7vYdas2cK6w4eTFNtZTAEBAQG88wSZf3j4NqxYsYJZwxJYG0qGRkVFCesePnyIzMxMxbYWGwKtu0jV1VVtsn791Obp1UO7S/HxCWwTR7yajIyMMNreYgqwt7fHjRs3MHOmX5uM0tzWgmJ78jgZGaeEEScRHx+HnJxso/ex2BCws7Nnq7s6HDmSzM/PncviW1ymQFtiShNaa1p83LjxRneCaFmcmHgQHWFEAcbXAob07t2bjbcKviIks8vISIepkAJob8BUKDXWkem3YjELKCoq5Pl+f//PFXOHbwLKVXS0F9AeiwRCxIULF5Cdnc2HwX8BRZqJiYm4c0ddtGnLOpXLTFuQL1I3BOgB3jTmbo/zvnt7eyWw5esaw0rRBxI1NY/Yn/4FS0KrNwcHh05fb8kPJBjREtvaGq/TSbnsRAcNwXISjZLU4qtj+b2KwYMH0crlY2gIZvW78vIKUngg1NjYHM408je0Q4lO1203FbgC6KNBvV7yYJNCCt5+ktgLH8e24nleXzava/ZTWa3S9bU4NE6XAqBxuhQAjdOlAGgczSvgHwAAAP///1UVZQAAAAZJREFUAwA/MXp6XoMFYAAAAABJRU5ErkJggg==">
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 -111.5 715 715%22%3E%3Crect width=%22715%22 height=%22492%22 rx=%2286%22 fill=%22%2330302e%22/%3E%3Cpath fill=%22%23fff%22 transform=%22translate(69.1 63.3) scale(0.4383)%22 d=%22M0 0H170L371 402L297 546L140 244V831H0ZM861 0H965A385 415.5 0 0 1 965 831H668V366L809 95V707H970A229 291 0 0 0 970 125H861ZM649.6 0L805.9 0L478.1 616.4L356.3 551.6ZM355.6 578.4L456.3 631.9L446.7 692.5L309.9 795.3L357.6 705.6A18 18 0 1 0 349.7 701.4L302 791.1L310.7 620.2Z%22/%3E%3C/svg%3E">
@@ -475,6 +491,47 @@ html.intro-out .intro{pointer-events:none}
   .intro-logo{left:16%;width:68%;margin-top:-9.647%}
   .intro-hint{margin-top:calc(9.647% + 22px)}
 }
+/* 언어 고르기 (KR / EN) : 알약 모양 바탕 위에서 흰 손잡이가 고른 쪽으로 미끄러짐 */
+.lang{position:relative;display:inline-grid;grid-template-columns:1fr 1fr;flex:none;margin-left:auto;padding:2px;border-radius:999px;background:#dad7cd;box-shadow:inset 0 1px 2px rgba(40,35,20,.16)}
+.lang::before{content:"";position:absolute;top:2px;bottom:2px;left:2px;width:calc(50% - 2px);border-radius:999px;background:#fff;box-shadow:0 1px 3px rgba(40,35,20,.3),0 0 0 .5px rgba(40,35,20,.06);transition:transform .22s cubic-bezier(.3,.7,.3,1)}
+html.lang-en .lang::before{transform:translateX(100%)}
+.lang button{position:relative;z-index:1;min-width:40px;height:26px;padding:0 10px;border:0;border-radius:999px;background:none;font:700 12px/1 var(--sans);letter-spacing:.03em;color:var(--muted);cursor:pointer;transition:color .2s}
+html.lang-ko .lang [data-lang=ko], html.lang-en .lang [data-lang=en]{color:var(--ink);cursor:default}
+.lang button:focus-visible{outline:2px solid var(--accent);outline-offset:1px}
+html.intro-on .lang, html.intro-out .lang{visibility:visible;z-index:1001}   /* 첫 화면에서도 고를 수 있게 */
+html.lang-en .intro-hint .ko, html.lang-ko .intro-hint .en{display:none}
+html.lang-en .md pre.raw-md::before{content:"Raw HTML · saved as-is"}
+@media (prefers-reduced-motion: reduce){ .lang::before, .lang button{transition:none} }
+/* 영어는 단추 글자가 길어서, 도구모음을 한 줄에 담으려면 한국어보다 조금 일찍 줄임 (위의 1320px·1190px 규칙과 같은 내용) */
+@media (max-width: 1410px){
+  html.lang-en .sg{width:52px}
+  html.lang-en .sg[data-block=h1] .sg-pv{font-size:16px}
+  html.lang-en .sg[data-block=h2] .sg-pv{font-size:14.5px}
+  html.lang-en .tr-hint{display:none}
+  html.lang-en .tbig{display:grid;grid-template-columns:auto;gap:2px}
+  html.lang-en .tb.big{flex-direction:row;height:27px;min-width:0;padding:0 7px;font-size:12px;gap:4px}
+  html.lang-en .tb.big .ic{font-size:13px}
+  html.lang-en .tb.big .ic svg{width:14px;height:14px;stroke-width:1.6}
+}
+@media (max-width: 1225px){
+  html.lang-en .toolbar{gap:4px}
+  html.lang-en .sg{width:48px}
+  html.lang-en #alertType{width:100px}
+}
+@media (max-width: 1290px){
+  /* 표 안에 커서를 두면 줄·칸 단추가 나타나는데, 그때도 한 줄에 남도록 */
+  html.lang-en #tableTools b{display:none}
+  html.lang-en .sg{width:46px}
+  html.lang-en #alertType{width:86px}
+  html.lang-en .toolbar .tb:not(.big){padding-left:5px;padding-right:5px}
+}
+@media (max-width: 640px){
+  /* 좁은 화면: 로고를 조금 줄이고, 자리가 모자라면 머메이드 표시가 줄어들게 해서 언어 단추가 같은 줄에 남도록 */
+  .top{flex-wrap:nowrap}
+  .brand{min-width:0}
+  .brand .logo{height:36px}
+  .brand .mm-chip{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+}
 </style>
 </head>
 <body>
@@ -485,7 +542,7 @@ html.intro-out .intro{pointer-events:none}
 <div class="intro" id="intro" role="button" tabindex="0" aria-label="MD Editor 시작하기">
   <div class="intro-bg"></div>
   <svg class="intro-logo" viewBox="0 0 1734 492" aria-hidden="true"><use href="#mdLogo"/></svg>
-  <p class="intro-hint">화면을 누르면 시작합니다</p>
+  <p class="intro-hint"><span class="ko">화면을 누르면 시작합니다</span><span class="en">Click anywhere to start</span></p>
 </div>
 <script>
 (function(){
@@ -493,6 +550,11 @@ html.intro-out .intro{pointer-events:none}
   if(!intro) return;
   var logo = intro.querySelector('.intro-logo'), bg = intro.querySelector('.intro-bg'), hint = intro.querySelector('.intro-hint');
   var leaving = false, finished = false;
+  /* 언어를 바꿔서 다시 불러온 경우에는 첫 화면을 건너뜀 */
+  var skip = false;
+  try{ skip = sessionStorage.getItem('mdpaint.skipintro') === '1'; sessionStorage.removeItem('mdpaint.skipintro'); }catch(err){}
+  if(skip){ intro.parentNode.removeChild(intro); return; }
+  try{ history.scrollRestoration = 'manual'; }catch(err){}   /* 첫 화면에서는 항상 맨 위에서 시작 */
   root.classList.add('intro-on');
   function done(){
     if(finished) return; finished = true;
@@ -525,6 +587,10 @@ html.intro-out .intro{pointer-events:none}
 
 <header class="top">
   <div class="brand"><svg class="logo" viewBox="0 0 1734 492" role="img" aria-label="MD Editor"><use href="#mdLogo"/></svg><span>깃허브용 마크다운 에디터</span><button class="mm-chip" id="mmChip" title="그림 미리보기에 쓰는 머메이드 버전. 눌러서 새 버전 점검 결과를 봅니다">머메이드</button></div>
+  <div class="lang" id="langSw" role="radiogroup" aria-label="언어 · Language">
+    <button type="button" role="radio" data-lang="ko" aria-checked="true" title="한국어">KR</button>
+    <button type="button" role="radio" data-lang="en" aria-checked="false" title="English">EN</button>
+  </div>
 </header>
 <div class="filebar">
   <button class="btn" id="btnNewTab" title="빈 문서를 새 탭으로 엽니다">새 탭</button>
@@ -737,7 +803,7 @@ html.intro-out .intro{pointer-events:none}
 <div class="dg" id="mc" hidden>
   <div class="dg-head">
     <strong>머메이드 코드</strong>
-    <span class="hint">순서도, 간트 차트처럼 도형으로 그릴 수 없는 머메이드 코드를 직접 쓰거나 붙여넣습니다. 오른쪽이 깃허브에서 보이는 모양입니다.</span>
+    <span class="hint">시퀀스 다이어그램, 간트 차트처럼 도형으로 그릴 수 없는 머메이드 코드를 직접 쓰거나 붙여넣습니다. 오른쪽이 깃허브에서 보이는 모양입니다.</span>
     <button class="btn" id="mcCancel">취소</button>
     <button class="btn primary" id="mcOk">문서에 넣기</button>
   </div>
@@ -779,6 +845,443 @@ html.intro-out .intro{pointer-events:none}
 <script>
 (function(){
 'use strict';
+
+/* =========================================================
+   언어 (한국어 / 영어)
+   화면에 보이는 글자는 한국어 원문을 __() 에 넣어서 쓴다. 영어일 때는 EN 표에서 같은 원문을 찾아 바꾼다.
+   {0}, {1} 자리에는 뒤에 준 값이 들어간다.  예) __('{0}줄', 12)
+   HTML 에 처음부터 적혀 있는 글자(단추 이름, 설명)는 EN_HTML 표로 한 번에 바꾼다.
+   언어를 바꾸면 화면을 다시 불러와서 처음부터 그 언어로 그린다. 문서는 브라우저에 보관되어 있어 그대로 남는다.
+   새 글자를 넣을 때: 한국어 원문을 __() 로 감싸고 EN 표에 영어를 한 줄 추가. 빠뜨리면 영어 화면의 콘솔에 경고가 나오고 tools/check.js 가 잡는다.
+   ========================================================= */
+const LANG = window.MD_LANG === 'en' ? 'en' : 'ko';
+const EN = {
+  '>지금 점검</button>': '>Check now</button>',
+  '<p>하루에 한 번 새 버전이 나왔는지 확인하고, 나오면 그 버전으로 그림이 깨지는지 미리 점검합니다. 그려지는지만 확인하며 모양이 조금 달라지는 것까지는 잡지 못합니다.</p>': '<p>Once a day this checks whether a new version is out and, if so, tests in advance whether diagrams break with it. It only checks that diagrams render; small changes in appearance are not detected.</p>',
+  '<p>깃허브가 새 버전으로 올렸는지는 여기서 알 수 없습니다. 깃허브 README에 <code>```mermaid</code> / <code>info</code> / <code>```</code> 세 줄을 넣으면 깃허브가 쓰는 버전이 표시됩니다.</p>': '<p>There is no way to tell from here whether GitHub has moved to the new version. Put the three lines <code>```mermaid</code> / <code>info</code> / <code>```</code> in a README on GitHub and it shows the version GitHub uses.</p>',
+  ' 점검 실패: ': ' check failed: ',
+  '<p>점검하는 중입니다…</p>': '<p>Checking…</p>',
+  '<h4>그림 미리보기 엔진 (머메이드)</h4><dl>': '<h4>Diagram preview engine (Mermaid)</h4><dl>',
+  '최신 버전을 확인하지 못했습니다 (인터넷 연결 확인)': 'Couldn\'t check the latest version (check your internet connection)',
+  '최신 버전 번호를 읽지 못했습니다': 'Couldn\'t read the latest version number',
+  ' · 점검 통과': ' · checks passed',
+  '머메이드 새 버전 ': 'New Mermaid ',
+  '머메이드 점검 중…': 'Checking Mermaid…',
+  '머메이드 ': 'Mermaid ',
+  '점검이 끝나지 않았습니다 (시간 초과)': 'The check didn\'t finish (timed out)',
+  '새 버전 파일을 불러오지 못했습니다': 'Couldn\'t load the new version\'s file',
+  '코드를 만들지 못함: ': 'Couldn\'t generate the code: ',
+  '깃 그래프: 체리픽': 'Git graph: cherry-pick',
+  '깃 그래프: 아래에서 위 방향': 'Git graph: bottom to top',
+  '깃 그래프: 세로 방향': 'Git graph: top to bottom',
+  '깃 그래프: 브랜치 색': 'Git graph: branch colors',
+  '깃 그래프: 이어지지 않은 브랜치와 줄 순서': 'Git graph: unconnected branches and row order',
+  '깃 그래프: 갈라내기·병합·태그·커밋 모양': 'Git graph: fork, merge, tag, commit types',
+  '자동 정리: 가로 방향': 'Auto layout: left to right',
+  '자동 정리: 위치 유지': 'Auto layout: keep positions',
+  '자동 정리: 크기 조절과 색': 'Auto layout: resizing and colors',
+  '자동 정리: 삼각형·역삼각형': 'Auto layout: triangle and inverted triangle',
+  '격자 배치: 폭 늘리기와 색': 'Grid: wider cells and colors',
+  '격자 배치: 도형마다 선 잇기': 'Grid: lines on every shape',
+  '격자 배치: 마름모에 선 잇기': 'Grid: lines to a diamond',
+  '<li><input type="checkbox" contenteditable="false" checked>문서 뼈대 잡기</li><li><input type="checkbox" contenteditable="false">다이어그램 다듬기</li>': '<li><input type="checkbox" contenteditable="false" checked>Outline the document</li><li><input type="checkbox" contenteditable="false">Polish the diagram</li>',
+  '아니오': 'No',
+  '예': 'Yes',
+  'README\n저장': 'Save\nREADME',
+  '글로 작성': 'Write text',
+  '도형 그리기': 'Draw shapes',
+  '그림 필요?': 'Need a diagram?',
+  '시작': 'Start',
+  '<h2>진행 순서</h2>': '<h2>Workflow</h2>',
+  '<p>위쪽 도구로 <b>굵게</b>, <i>기울임</i>, 목록, 표를 넣고 <b>다이어그램 삽입</b>으로 그림을 그려 보세요.</p>': '<p>Use the tools above to add <b>bold</b>, <i>italic</i>, lists, and tables, and draw a picture with <b>Insert diagram</b>.</p>',
+  '<h1>프로젝트 이름</h1>': '<h1>Project name</h1>',
+  '처음': 'Initial',
+  '클릭해서 깃 그래프 수정': 'Click to edit the Git graph',
+  '머메이드 코드를 복사했습니다': 'Mermaid code copied',
+  '여기에는 이어 붙일 수 없습니다': 'Can\'t connect here',
+  '같은 이름의 커밋이 이미 있습니다: ': 'A commit with this name already exists: ',
+  '선택한 커밋이 없습니다': 'No commit is selected',
+  '같은 이름의 브랜치가 이미 있습니다: ': 'A branch with this name already exists: ',
+  'main은 이름을 바꿀 수 없습니다': 'main can\'t be renamed',
+  '브랜치 이름을 입력하세요': 'Enter a branch name',
+  '커밋이 하나는 있어야 합니다. 다른 줄에 커밋을 먼저 만들어 주세요': 'There has to be at least one commit. Add a commit on another row first',
+  'main은 지울 수 없습니다': 'main can\'t be deleted',
+  '커밋이 하나는 있어야 합니다': 'There has to be at least one commit',
+  '커밋을 찾을 수 없습니다': 'Couldn\'t find the commit',
+  '이미 맨 뒤입니다': 'Already at the end',
+  '이미 맨 앞입니다': 'Already at the front',
+  'main은 머메이드 규칙상 항상 첫 줄입니다': 'main is always the first row (Mermaid rule)',
+  '브랜치를 찾을 수 없습니다': 'Couldn\'t find the branch',
+  'main의 첫 커밋은 다른 줄에서 선을 받을 수 없습니다 (머메이드에서 main은 항상 뿌리입니다)': 'The first commit on main can\'t receive a line from another row (in Mermaid, main is always the root)',
+  '체리픽 커밋은 다른 선을 받을 수 없습니다': 'A cherry-pick commit can\'t receive another line',
+  '같은 줄의 커밋은 머메이드가 순서대로 이어 줍니다': 'Mermaid connects commits on the same row in order',
+  '커밋 ': 'Commit ',
+  '머메이드 규칙에 따라 선이 옮겨졌습니다: 병합선은 그 줄의 마지막 커밋에서, 갈라진 선은 그 줄의 첫 커밋으로 이어집니다': 'The line was moved to follow Mermaid\'s rules: a merge line starts from the last commit on its row, and a fork line goes to the first commit on its row',
+  '⚠ 머메이드는 줄 색을 8개까지만 구분합니다. 9번째 줄부터는 1번째 줄과 같은 색을 씁니다.': '⚠ Mermaid only tells 8 row colors apart. From the 9th row on, colors repeat from the 1st.',
+  '⚠ 브랜치 색은 코드 첫 줄의 테마 설정(%%{init}%%)으로 들어갑니다. 보는 곳의 머메이드 설정에 따라 기본색으로 보일 수 있습니다.': '⚠ Branch colors go into a theme setting on the first line of the code (%%{init}%%). Depending on the viewer\'s Mermaid settings they may show in the default colors.',
+  '⚠ 세로 방향은 비교적 새 문법이라 깃허브 버전에 따라 가로로 나오거나 그려지지 않을 수 있습니다.': '⚠ Vertical direction is fairly new syntax; depending on GitHub\'s version it may come out horizontal or not render.',
+  '<span class="gi-fill"></span><button class="btn" data-ga="undo" title="되돌리기 (Ctrl+Z)">↶ 되돌리기</button>': '<span class="gi-fill"></span><button class="btn" data-ga="undo" title="Undo (Ctrl+Z)">↶ Undo</button>',
+  '<span class="gi-hint">줄 위의 점선 칸을 눌러 커밋 추가 · 커밋을 다른 커밋이나 빈 칸으로 끌어 이어 붙이기 · 선·커밋·이름표에 마우스를 올리면 × 로 삭제</span>': '<span class="gi-hint">Click a dotted slot on a row to add a commit · drag a commit onto another commit or an empty slot to connect · hover a line, commit, or label and click × to delete</span>',
+  '<button class="btn" data-ga="unlink">선 끊기</button>': '<button class="btn" data-ga="unlink">Cut line</button>',
+  '병합선': 'Merge line',
+  '갈라진 선': 'Fork line',
+  '<span class="gi-sep"></span><button class="btn" data-ga="delb" title="이 브랜치와 그 안의 커밋을 지웁니다">브랜치 삭제</button>': '<span class="gi-sep"></span><button class="btn" data-ga="delb" title="Deletes this branch and its commits">Delete branch</button>',
+  '" data-gc="" title="머메이드 기본색으로 되돌립니다">기본색</button>': '" data-gc="" title="Back to Mermaid\'s default color">Default</button>',
+  '<label class="pal-custom" title="다른 색 고르기"><input type="color" id="giColor" value="': '<label class="pal-custom" title="Pick another color"><input type="color" id="giColor" value="',
+  ' disabled title="main은 이름을 바꿀 수 없습니다"': ' disabled title="main can\'t be renamed"',
+  '<b class="gi-t">브랜치</b><label>이름 <input id="giBn" value="': '<b class="gi-t">Branch</b><label>Name <input id="giBn" value="',
+  '<span class="gi-sep"></span><button class="btn" data-ga="del">삭제</button>': '<span class="gi-sep"></span><button class="btn" data-ga="del">Delete</button>',
+  '<span class="gi-sep"></span><button class="btn" data-ga="left" title="순서를 한 칸 앞으로">◀ 앞으로</button><button class="btn" data-ga="right" title="순서를 한 칸 뒤로">뒤로 ▶</button>': '<span class="gi-sep"></span><button class="btn" data-ga="left" title="Move one step earlier">◀ Earlier</button><button class="btn" data-ga="right" title="Move one step later">Later ▶</button>',
+  '<label>모양 <select id="giType"><option value="NORMAL">보통</option><option value="HIGHLIGHT">강조 (네모)</option><option value="REVERSE">되돌림 (X)</option></select></label>': '<label>Type <select id="giType"><option value="NORMAL">Normal</option><option value="HIGHLIGHT">Highlight (square)</option><option value="REVERSE">Reverse (X)</option></select></label>',
+  '<label>태그 <input id="giTag" class="short" value="': '<label>Tag <input id="giTag" class="short" value="',
+  '" maxlength="40" placeholder="(자동 번호)"></label>': '" maxlength="40" placeholder="(auto id)"></label>',
+  '<label>이름 <input id="giId" value="': '<label>Name <input id="giId" value="',
+  '커밋': 'Commit',
+  '체리픽': 'Cherry-pick',
+  '병합 커밋': 'Merge commit',
+  '(자동 번호)': '(auto id)',
+  '브랜치 삭제': 'Delete branch',
+  ', 끌어서 줄 순서 바꾸기': ', drag to reorder rows',
+  ' — 눌러서 이름·색 바꾸기': ' — click to rename or recolor',
+  '커밋 삭제': 'Delete commit',
+  ' — 다른 커밋이나 빈 칸으로 끌면 이어 붙이기, 같은 줄에서 끌면 자리 옮기기</title>': ' — drag onto another commit or an empty slot to connect, drag along the same row to move</title>',
+  '체리픽: ': 'Cherry-pick: ',
+  '"/><title>여기에 커밋 추가</title></g>': '"/><title>Add a commit here</title></g>',
+  '이 선 끊기': 'Cut this line',
+  '" text-anchor="middle" dominant-baseline="central">새 브랜치</text>': '" text-anchor="middle" dominant-baseline="central">New branch</text>',
+  '알 수 없는 항목입니다': 'Unknown item',
+  '커밋이 없는 브랜치에는 체리픽할 수 없습니다': 'Can\'t cherry-pick onto a branch with no commits',
+  '같은 브랜치의 커밋은 체리픽할 수 없습니다': 'A commit can\'t be cherry-picked onto its own branch',
+  '체리픽할 커밋을 찾을 수 없습니다: ': 'Couldn\'t find the commit to cherry-pick: ',
+  '두 브랜치의 끝이 같아서 병합할 내용이 없습니다': 'Both branches end at the same commit, so there is nothing to merge',
+  '커밋이 없는 브랜치는 병합할 수 없습니다': 'A branch with no commits can\'t be merged',
+  '자기 자신에게는 병합할 수 없습니다': 'A branch can\'t be merged into itself',
+  '병합할 브랜치가 아직 없습니다: ': 'The branch to merge doesn\'t exist yet: ',
+  '브랜치가 갈라져 나온 커밋보다 앞에는 그 브랜치의 커밋을 둘 수 없습니다': 'A branch\'s commits can\'t come before the commit it forks from',
+  '갈라져 나올 브랜치가 아직 없습니다: ': 'The branch to fork from doesn\'t exist yet: ',
+  '브랜치 이름이 비어 있습니다': 'The branch name is empty',
+  '마크다운(.md) 파일만 불러올 수 있습니다': 'Only Markdown (.md) files can be opened',
+  '파일을 읽지 못했습니다': 'Couldn\'t read the file',
+  '파일이 너무 큽니다 (3MB 이하)': 'The file is too large (3 MB max)',
+  '불러왔습니다': 'Loaded',
+  '코드가 비어 있습니다': 'The code is empty',
+  '클릭해서 코드 수정': 'Click to edit the code',
+  'sequenceDiagram\n    participant 사용자\n    participant 서버\n    사용자->>서버: 로그인 요청\n    서버-->>사용자: 토큰 발급': 'sequenceDiagram\n    participant User\n    participant Server\n    User->>Server: Sign-in request\n    Server-->>User: Issue token',
+  '클릭해서 도형 수정': 'Click to edit the shapes',
+  '<div class="dg-render"></div><div class="dg-actions"><button data-fig="edit">수정</button><button data-fig="del">삭제</button></div>': '<div class="dg-render"></div><div class="dg-actions"><button data-fig="edit">Edit</button><button data-fig="del">Delete</button></div>',
+  '놓을 자리가 부족합니다': 'Not enough room to place it',
+  '이미 도형이 있는 칸입니다': 'That cell already has a shape',
+  '선 위 글자': 'Text on the line',
+  '글자 입력': 'Type text',
+  '<div style="color:#9a968b;padding:24px 0">도형을 그리면 여기에 결과가 보입니다</div>': '<div style="color:#9a968b;padding:24px 0">Your diagram shows up here as you draw</div>',
+  '왼쪽에서 도형을 고르고<br>여기에 드래그해서 그리세요': 'Pick a shape on the left<br>and drag here to draw',
+  '왼쪽에서 도형을 고르고<br>원하는 칸을 클릭하세요': 'Pick a shape on the left<br>and click a cell',
+  '도형을 고르고 캔버스에서 드래그 · 선택 후 손잡이로 상하좌우 크기 조절 · 선 도구로 도형에서 도형으로 드래그 · 더블클릭으로 글자 입력(Shift+Enter 줄바꿈)': 'Pick a shape and drag on the canvas · select, then resize with the handles · use a line tool to drag from shape to shape · double-click to type (Shift+Enter for a new line)',
+  '도형을 고르고 원하는 칸을 클릭 · 선 도구로 도형에서 도형으로 드래그 · 더블클릭으로 글자 입력(Shift+Enter 줄바꿈) · 드래그로 칸 옮기기 · 좌우 손잡이로 폭 조절': 'Pick a shape and click a cell · use a line tool to drag from shape to shape · double-click to type (Shift+Enter for a new line) · drag to move a shape · side handles change the width',
+  '배치는 머메이드가 다시 잡습니다': 'Mermaid decides the layout',
+  '그린 줄과 칸에 맞춰 배치합니다': 'Laid out along the rows and columns you drew',
+  '놓은 칸 위치가 그대로 유지됩니다': 'Cells stay exactly where you placed them',
+  '⚠ 삼각형은 최신 머메이드 문법이라 깃허브 버전에 따라 그려지지 않을 수 있습니다.': '⚠ Triangles use newer Mermaid syntax and may not render depending on GitHub\'s version.',
+  '⚠ 격자 배치에는 삼각형이 없어 사각형으로 나옵니다. 삼각형을 쓰려면 "자동 정리"로 바꾸세요.': '⚠ Grid mode has no triangles, so they come out as rectangles. Switch to "Auto layout" to use triangles.',
+  '" width="10" height="26" rx="3"><title>좌우로 끌어 폭 조절</title></rect>': '" width="10" height="26" rx="3"><title>Drag sideways to change the width</title></rect>',
+  '삼각형은 "자동 정리" 방식에서만 쓸 수 있습니다': 'Triangles are only available in "Auto layout" mode',
+  '선택한 것 지우기 (Delete)': 'Delete selection (Delete)',
+  '<div class="lbl">선</div>': '<div class="lbl">Lines</div>',
+  '<div class="lbl">도형</div>': '<div class="lbl">Shapes</div>',
+  '되돌리기 (Ctrl+Z)': 'Undo (Ctrl+Z)',
+  '선택 / 이동': 'Select / move',
+  '점선 화살표': 'Dotted arrow',
+  '굵은 화살표': 'Thick arrow',
+  '선': 'Line',
+  '양방향 화살표': 'Two-way arrow',
+  '화살표': 'Arrow',
+  '역삼각형 (자동 정리 전용 · 깃허브 버전에 따라 안 보일 수 있음)': 'Inverted triangle (auto layout only · may not show depending on GitHub\'s version)',
+  '삼각형 (자동 정리 전용 · 깃허브 버전에 따라 안 보일 수 있음)': 'Triangle (auto layout only · may not show depending on GitHub\'s version)',
+  '사다리꼴': 'Trapezoid',
+  '평행사변형': 'Parallelogram',
+  '육각형': 'Hexagon',
+  '마름모': 'Diamond',
+  '이중 원': 'Double circle',
+  '원': 'Circle',
+  '원통 (데이터베이스)': 'Cylinder (database)',
+  '이중 사각형': 'Subroutine (double-sided rectangle)',
+  '알약 모양': 'Stadium',
+  '둥근 사각형': 'Rounded rectangle',
+  '사각형': 'Rectangle',
+  '마크다운 문서': 'Markdown document',
+  ' (저장 안 됨)': ' (unsaved)',
+  '저장하지 않은 변경이 있습니다': 'There are unsaved changes',
+  '제목 없음': 'Untitled',
+  '<h1>제목</h1><p><br></p>': '<h1>Title</h1><p><br></p>',
+  '마크다운을 복사했습니다': 'Markdown copied',
+  '코드를 읽는 중 문제가 생겨 편집 칸에 반영하지 못했습니다': 'Something went wrong while reading the code, so the editor wasn\'t updated',
+  '펼치기': 'Details',
+  ' (Ctrl+Z로 되돌릴 수 있습니다)': ' (undo with Ctrl+Z)',
+  '코드 블록': 'code block',
+  'HTML 원문': 'raw HTML',
+  '접기 블록': 'details block',
+  '알림 상자': 'alert',
+  '인용': 'quote',
+  '구분선': 'divider',
+  '체크 목록': 'task list',
+  '체크 항목': 'task item',
+  '표': 'table',
+  '첫 줄(제목 줄)은 지울 수 없습니다': 'The first row (header) can\'t be deleted',
+  '제목': 'Header',
+  '내용을 입력하세요': 'Type here',
+  '눌러서 펼치기': 'Click to expand',
+  '</p><p>내용을 입력하세요</p>': '</p><p>Type here</p>',
+  '<button class="btn" id="tpGo">넣기</button></div>': '<button class="btn" id="tpGo">Insert</button></div>',
+  ', 제목 줄 포함)" aria-label="세로 줄 수"><span>줄</span>': ', including the header row)" aria-label="Rows"><span>rows</span>',
+  '" value="4" title="세로 줄 수 (1~': '" value="4" title="Rows (1–',
+  ')" aria-label="가로 칸 수"><span>칸 ×</span>': ')" aria-label="Columns"><span>cols ×</span>',
+  '" value="4" title="가로 칸 수 (1~': '" value="4" title="Columns (1–',
+  '<div class="tpick-n"><span>직접 입력</span>': '<div class="tpick-n"><span>Custom</span>',
+  '<div class="tpick-t">표 넣기 <span style="font-weight:500;color:var(--muted)">· 첫 줄은 제목 줄</span></div><div class="tpick-g"></div><div class="tpick-l"></div>': '<div class="tpick-t">Insert table <span style="font-weight:500;color:var(--muted)">· first row is the header</span></div><div class="tpick-g"></div><div class="tpick-l"></div>',
+  '이 자리는 목록으로 바꿀 수 없습니다': 'This spot can\'t be turned into a list',
+  '접기 제목 줄은 코드 블록으로 바꿀 수 없습니다. 내용 칸에서 눌러 주세요': 'The summary line of a details block can\'t become a code block. Click inside the body instead',
+  '링크 주소를 입력하세요': 'Enter the link address',
+  '코드로 바꿀 글자를 먼저 선택하세요': 'Select the text to turn into code first',
+  '여기는 정렬할 수 없습니다': 'This can\'t be aligned',
+  '접기 제목 줄은 정렬할 수 없습니다': 'The summary line of a details block can\'t be aligned',
+  '코드 블록은 정렬할 수 없습니다': 'Code blocks can\'t be aligned',
+  '목록은 정렬할 수 없습니다 (깃허브가 지원하지 않습니다)': 'Lists can\'t be aligned (GitHub doesn\'t support it)',
+  '접기 제목 줄의 모양은 바꿀 수 없습니다': 'The summary line of a details block can\'t be restyled',
+  '목록 안에서는 제목을 쓸 수 없습니다': 'Headings can\'t be used inside a list',
+  '<div class="err">미리보기 오류: ': '<div class="err">Preview error: ',
+  '<div style="color:#9a968b;font-size:12.5px;padding:10px 0">그림 준비 중…</div>': '<div style="color:#9a968b;font-size:12.5px;padding:10px 0">Preparing diagram…</div>',
+  '가로 {0}칸 × 세로 {1}줄': '{0} columns × {1} rows',
+  '칸 위를 훑어서 크기를 고르세요': 'Sweep over the cells to pick a size',
+  '{0} 지우기': 'Delete {0}',
+  '{0} 지움 · Ctrl+Z로 되살릴 수 있습니다': 'Deleted {0} · press Ctrl+Z to bring it back',
+  '{0}줄': '{0} lines',
+  ' · 직접 고친 코드': ' · hand-edited code',
+  '탭 닫기': 'Close tab',
+  '{0} 닫기': 'Close {0}',
+  '{0} 파일로 저장했습니다': 'Saved as {0}',
+  '{0}.md 파일로 저장했습니다 (이 브라우저는 저장 위치를 고르는 창을 띄울 수 없어 내려받기 폴더에 저장)': 'Saved as {0}.md (this browser can\'t show a save-location dialog, so it went to your Downloads folder)',
+  '"{0}" 문서에 저장하지 않은 변경이 있습니다.': '"{0}" has unsaved changes.',
+  '⚠ 위치 유지는 화살표가 모두 {0}으로 향할 때만 맞게 나옵니다. 지금 {1}개가 같은 줄을 잇거나 거꾸로 향해서 배치가 흐트러질 수 있습니다.': '⚠ Keep positions only works when every arrow points {0}. Right now {1} of them connect shapes on the same row or point backwards, so the layout may shift.',
+  '오른쪽': 'right',
+  '아래쪽': 'down',
+  '편집 가능한 그림 {0}개': 'editable diagrams: {0}',
+  '코드로 편집하는 그림 {0}개': 'code-only diagrams: {0}',
+  'HTML 원문 {0}곳': 'raw HTML blocks: {0}',
+  '{0} 끝에 커밋 추가': 'Add a commit at the end of {0}',
+  '병합선은 그 시점에 그 줄의 마지막 커밋에서만 나올 수 있습니다 (머메이드 규칙)': 'A merge line can only start from the last commit on that row at that point (Mermaid rule)',
+  ' → 「{0}」에서 끌어 주세요': ' → drag from "{0}" instead',
+  '격자 배치: 도형 {0}종': 'Grid: {0} shapes',
+  '격자 배치: 선 {0}종과 선 위의 글자': 'Grid: {0} line types with labels',
+  '자동 정리: 도형 {0}종': 'Auto layout: {0} shapes',
+  '자동 정리: 선 {0}종과 선 위의 글자': 'Auto layout: {0} line types with labels',
+  '{0}가지 깨짐': '{0} broken',
+  ' (기본 {0} 아님)': ' (not the default {0})',
+  '머메이드 새 버전 {0}에서 그림 {1}가지가 그려지지 않습니다. 위쪽 "머메이드" 표시를 눌러 확인하세요': 'With the new Mermaid {0}, {1} kinds of diagram fail to render. Click the "Mermaid" badge at the top for details',
+  '<dt>지금 미리보기</dt><dd>': '<dt>Preview uses</dt><dd>',
+  ' · 깃허브와 같은 버전으로 맞춰 둠': ' · pinned to the version GitHub uses',
+  ' · 기본값({0})이 아님': ' · not the default ({0})',
+  '<dt>최신 버전</dt><dd>': '<dt>Latest release</dt><dd>',
+  ' · 새 버전': ' · newer',
+  ' · 같음': ' · same',
+  '확인 전': 'not checked yet',
+  '{0} 확인': 'checked {0}',
+  '<b>{0}</b> 버전으로 이 편집기가 만드는 그림 {1}가지를 그려 본 결과: ': 'Result of rendering the {1} kinds of diagram this editor produces with <b>{0}</b>: ',
+  '{0}가지가 그려지지 않습니다.': '{0} failed to render.',
+  '모두 그려집니다.': 'All of them render.',
+  '미리보기를 {0}(으)로 보기': 'Preview with {0}',
+  '미리보기를 기본({0})으로 되돌리기': 'Back to the default ({0})'
+};
+const EN_HTML = {
+  "MD Editor - 깃허브용 마크다운 에디터": "MD Editor - Markdown editor for GitHub",
+  "화면을 누르면 시작합니다": "Click anywhere to start",
+  "깃허브용 마크다운 에디터": "Markdown editor for GitHub",
+  "머메이드": "Mermaid",
+  "새 탭": "New tab",
+  "불러오기": "Open",
+  "저장": "Save",
+  "가나다": "Abc",
+  "본문": "Body",
+  "제목 1": "H1",
+  "제목 2": "H2",
+  "제목 3": "H3",
+  "제목 4": "H4",
+  "@본문": "Body text",
+  "@제목 2": "Heading 2",
+  "@제목 3": "Heading 3",
+  "@제목 4": "Heading 4",
+  "링크": "Link",
+  "• 목록": "• List",
+  "1. 번호": "1. Numbered",
+  "☑ 체크": "☑ Tasks",
+  "인용": "Quote",
+  "코드블록": "Code block",
+  "구분선": "Divider",
+  "▸ 접기": "▸ Details",
+  "▦ 표 ▾": "▦ Table ▾",
+  "알림 상자": "Alert",
+  "Note (참고)": "Note",
+  "Tip (팁)": "Tip",
+  "Important (중요)": "Important",
+  "Warning (주의)": "Warning",
+  "Caution (경고)": "Caution",
+  "표 안을 누르면 줄·칸 단추가 나옵니다": "Click inside a table for row/column buttons",
+  "표": "Table",
+  "+행": "+Row",
+  "+열": "+Col",
+  "−행": "−Row",
+  "−열": "−Col",
+  "다이어그램 삽입": "Insert diagram",
+  "깃 그래프 삽입": "Insert Git graph",
+  "코드 복사": "Copy code",
+  "편집": "Edit",
+  "새 문단(간격 있음) ·": "new paragraph (with spacing) ·",
+  "간격 없이 줄만 바꿈": "line break without spacing",
+  "마크다운 코드": "Markdown code",
+  "그림 편집 정보 포함": "Include diagram edit data",
+  "코드를 여기서 직접 고쳐도 왼쪽 편집 칸에 바로 반영됩니다. 깃허브는 글자 크기와 색 지정을 지원하지 않으며, 크기는 제목 단계로 조절됩니다.": "You can edit the code here and the editor on the left updates right away. GitHub doesn't support font sizes or colors; use heading levels for size.",
+  "다이어그램 그리기": "Draw a diagram",
+  "▦ 격자 배치": "▦ Grid",
+  "⇅ 자동 정리": "⇅ Auto layout",
+  "↓ 위에서 아래": "↓ Top to bottom",
+  "→ 왼쪽에서 오른쪽": "→ Left to right",
+  "위치 유지": "Keep positions",
+  "취소": "Cancel",
+  "문서에 넣기": "Insert",
+  "채우기": "Fill",
+  "가": "A",
+  "글자색": "Text",
+  "테두리": "Border",
+  "기본색": "Default",
+  "깃허브에서 보이는 모양": "How it looks on GitHub",
+  "복사": "Copy",
+  "머메이드 코드": "Mermaid code",
+  "깃 그래프": "Git graph",
+  "브랜치와 커밋은 따로 만들고, 선은 커밋을 끌어서 직접 잇습니다 · 선·커밋·이름표에 마우스를 올리면 × 로 지우기 · 이름표를 끌면 줄 순서 변경": "Create branches and commits separately, then drag a commit to connect them yourself · hover a line, commit, or label and click × to delete · drag a label to reorder rows",
+  "→ 가로": "→ Horizontal",
+  "↑ 아래에서 위": "↑ Bottom to top",
+  "+ 새 브랜치": "+ New branch",
+  "빈 줄로 만들어집니다 · 줄 위 점선 칸을 눌러 커밋 추가 · 커밋을 다른 줄로 끌어 잇기": "Starts as an empty row · click a dotted slot on a row to add a commit · drag a commit to another row to connect",
+  "시퀀스 다이어그램, 간트 차트처럼 도형으로 그릴 수 없는 머메이드 코드를 직접 쓰거나 붙여넣습니다. 오른쪽이 깃허브에서 보이는 모양입니다.": "Write or paste Mermaid code that can't be drawn with shapes, such as sequence diagrams or Gantt charts. The right side shows how it looks on GitHub.",
+  "다이어그램을 그린 정보(도형 위치·크기·색)를 코드 끝에 주석 한 줄(": "Stores how each diagram was drawn (shape positions, sizes, colors) as a one-line comment (",
+  ")로 넣어 둡니다.": ") at the end of its code.",
+  "켜면": "On:",
+  "저장한 .md 파일을 나중에 불러와도 도형 그대로 다시 고칠 수 있습니다.": "when you open the saved .md file later, you can keep editing the shapes as you drew them.",
+  "끄면": "Off:",
+  "코드가 깔끔해지지만, 다시 불러왔을 때 코드로만 고칠 수 있습니다.": "the code is cleaner, but after reopening you can only edit it as code.",
+  "깃허브 화면에는 보이지 않습니다. 깃 그래프는 이 줄 없이도 다시 고칠 수 있습니다.": "It doesn't show on GitHub. Git graphs can be edited again without this line.",
+  "저장하시겠습니까?": "Save changes?",
+  "저장 안 함": "Don't save",
+  "서식 버튼과 도형 툴로 깃허브 README를 만드는 마크다운 에디터. 도형을 그리면 머메이드 코드가 만들어집니다.": "A Markdown editor for writing GitHub READMEs with formatting buttons and shape tools. Draw shapes and it generates Mermaid code.",
+  "MD Editor 시작하기": "Start MD Editor",
+  "그림 미리보기에 쓰는 머메이드 버전. 눌러서 새 버전 점검 결과를 봅니다": "The Mermaid version used for diagram previews. Click to see the new-version check results",
+  "빈 문서를 새 탭으로 엽니다": "Open a blank document in a new tab",
+  "마크다운 파일(.md)을 새 탭으로 불러옵니다. 파일을 창에 끌어다 놓아도 됩니다": "Open a Markdown file (.md) in a new tab. You can also drop a file onto the window",
+  "저장할 파일 이름": "File name to save as",
+  "파일 이름": "File name",
+  "저장할 위치를 골라 .md 파일로 저장합니다 (Ctrl+S)": "Choose where to save the .md file (Ctrl+S)",
+  "문단 모양 (본문·제목)": "Paragraph style (body, headings)",
+  "제목 1 (가장 큼)": "Heading 1 (largest)",
+  "굵게 (Ctrl+B)": "Bold (Ctrl+B)",
+  "기울임 (Ctrl+I)": "Italic (Ctrl+I)",
+  "취소선": "Strikethrough",
+  "글 중간 코드": "Inline code",
+  "왼쪽 정렬 (기본)": "Align left (default)",
+  "가운데 정렬": "Align center",
+  "오른쪽 정렬": "Align right",
+  "글머리 목록": "Bulleted list",
+  "번호 목록": "Numbered list",
+  "체크 목록": "Task list",
+  "코드 블록": "Code block",
+  "접기/펼치기: 제목을 누르면 내용이 펼쳐지는 블록 (깃허브의 <details>)": "Collapsible section: click the summary to expand the content (GitHub <details>)",
+  "표 넣기: 칸을 훑어서 크기를 고릅니다": "Insert table: sweep over the cells to pick a size",
+  "깃허브 알림 상자": "GitHub alert",
+  "도형을 그려서 다이어그램을 넣습니다 (머메이드 코드로 만들어집니다)": "Draw shapes to insert a diagram (generated as Mermaid code)",
+  "커밋과 브랜치를 눌러서 깃 그래프를 넣습니다 (머메이드 코드로 만들어집니다)": "Click commits and branches to insert a Git graph (generated as Mermaid code)",
+  "지금 탭의 마크다운 코드를 통째로 복사합니다": "Copy this tab's entire Markdown code",
+  "열려 있는 문서": "Open documents",
+  "맨 아래에 줄 추가": "Add a row at the bottom",
+  "맨 오른쪽에 칸 추가": "Add a column on the right",
+  "커서가 있는 줄 지우기": "Delete the row with the cursor",
+  "커서가 있는 칸(세로줄) 지우기": "Delete the column with the cursor",
+  "커서가 있는 칸 지우기": "Delete the column with the cursor",
+  "끌어서 편집 칸과 코드 칸의 폭 조절 · 두 번 누르면 처음 폭으로": "Drag to resize the editor and code panes · double-click to reset",
+  "그린 내용을 머메이드 코드 끝에 주석(%% mdpaint:...) 한 줄로 넣어 둡니다. 깃허브 표시에는 영향이 없고, 나중에 MD 불러오기로 열었을 때 그림을 다시 편집할 수 있습니다": "Keeps what you drew as a one-line comment (%% mdpaint:...) at the end of the Mermaid code. It doesn't affect how GitHub shows it, and lets you edit the diagram again when you open the .md file later",
+  "그림 편집 정보 포함이 무엇인지 설명 보기": "What is \"Include diagram edit data\"?",
+  "마크다운 코드 (직접 고칠 수 있습니다)": "Markdown code (editable)",
+  "놓은 칸 위치가 정확히 유지됩니다. 크기는 가로 칸 수만 조절되고 삼각형은 없습니다": "Shapes stay exactly in the cells you put them in. Only the width in cells can be changed, and there are no triangles",
+  "도형마다 상하좌우 크기 조절, 모든 도형 사용 가능. 배치는 머메이드가 잡고 위치 유지 옵션으로 줄과 칸을 맞춥니다": "Resize each shape in any direction and use every shape. Mermaid decides the layout; \"Keep positions\" lines things up by row and column",
+  "그린 위치대로 줄과 칸을 맞춥니다. 화살표가 모두 한 방향(아래쪽 또는 오른쪽)으로 향할 때 맞게 나옵니다": "Lines shapes up by row and column as drawn. Works when every arrow points the same way (down or right)",
+  "글자 입력": "Type text",
+  "그리는 영역 확대·축소": "Zoom the canvas",
+  "축소": "Zoom out",
+  "100%로": "Reset to 100%",
+  "확대": "Zoom in",
+  "팔레트 색을 도형 채우기에 적용": "Apply palette colors to the shape fill",
+  "팔레트 색을 글자에 적용": "Apply palette colors to the text",
+  "팔레트 색을 도형 테두리에 적용": "Apply palette colors to the shape border",
+  "다른 색 직접 고르기": "Pick another color",
+  "지금 고른 대상(채우기, 글자색, 테두리)을 머메이드 기본색으로 되돌림": "Reset the selected target (fill, text, border) to Mermaid's default color",
+  "끌어서 그리는 영역과 미리보기 영역의 크기 조절 (더블클릭: 처음 크기)": "Drag to resize the canvas and preview (double-click: reset)",
+  "머메이드 코드를 README에 바로 붙일 수 있는 형태(```mermaid 포함)로 복사": "Copy the Mermaid code ready to paste into a README (including ```mermaid)",
+  "미리보기 확대·축소": "Zoom the preview",
+  "화면에 맞춤": "Fit to view",
+  "어디에도 이어지지 않은 빈 줄을 하나 만듭니다": "Creates an empty row that is not connected to anything",
+  "한국어": "한국어",
+  "언어 · Language": "언어 · Language"
+};
+const I18N_MISS = {};
+function i18nMiss(s){
+  if(I18N_MISS[s]) return;
+  I18N_MISS[s] = 1;
+  if(window.console && console.warn) console.warn('[i18n] 영어 번역 없음: ' + s);
+}
+function __(s){
+  let r = s;
+  if(LANG === 'en'){
+    if(Object.prototype.hasOwnProperty.call(EN, s)) r = EN[s];
+    else if(/[가-힣]/.test(s)) i18nMiss(s);
+  }
+  if(arguments.length > 1){
+    const a = arguments;
+    r = r.replace(/\{(\d)\}/g, (all, i) => a[+i + 1] === undefined ? all : a[+i + 1]);
+  }
+  return r;
+}
+window.__i18nMiss = I18N_MISS;
+/* HTML 에 처음부터 적혀 있는 글자를 영어로. 문서 내용이 편집 칸에 들어오기 전에 한 번만 돈다(쓴 글은 건드리지 않음) */
+(function(){
+  if(LANG !== 'en') return;
+  const HAN = /[가-힣]/, ATTRS = ['title', 'aria-label', 'placeholder', 'alt'];
+  /* 같은 글자가 단추 이름과 풍선 설명에 따로 쓰이면, 설명 쪽은 '@' 를 붙인 항목을 먼저 찾음 */
+  const look = (s, attr) => {
+    const k = s.replace(/\s+/g, ' ').trim();
+    if(attr && Object.prototype.hasOwnProperty.call(EN_HTML, '@' + k)) return EN_HTML['@' + k];
+    if(Object.prototype.hasOwnProperty.call(EN_HTML, k)) return EN_HTML[k];
+    i18nMiss(k);
+    return null;
+  };
+  const tw = document.createTreeWalker(document.documentElement, NodeFilter.SHOW_ELEMENT | NodeFilter.SHOW_TEXT);
+  const todo = [];
+  let n;
+  while((n = tw.nextNode())) todo.push(n);
+  todo.forEach(n => {
+    if(n.nodeType === 3){
+      const p = n.parentNode;
+      if(!p || p.nodeName === 'SCRIPT' || p.nodeName === 'STYLE' || !HAN.test(n.nodeValue)) return;
+      const v = n.nodeValue, en = look(v);
+      if(en != null) n.nodeValue = v.match(/^\s*/)[0] + en + v.match(/\s*$/)[0];
+      return;
+    }
+    ATTRS.forEach(a => {
+      const v = n.getAttribute(a);
+      if(v && HAN.test(v)){ const en = look(v, true); if(en != null) n.setAttribute(a, en); }
+    });
+    if(n.nodeName === 'META' && n.getAttribute('name') === 'description'){
+      const en = look(n.getAttribute('content') || '', true);
+      if(en != null) n.setAttribute('content', en);
+    }
+  });
+})();
 
 /* =========================================================
    공통 도우미
@@ -860,7 +1363,7 @@ function figRender(f){
 }
 async function renderMermaid(code, target){
   if(!mmReady){
-    if(!target.firstChild) target.innerHTML = '<div style="color:#9a968b;font-size:12.5px;padding:10px 0">그림 준비 중…</div>';
+    if(!target.firstChild) target.innerHTML = __('<div style="color:#9a968b;font-size:12.5px;padding:10px 0">그림 준비 중…</div>');
     await mmLoad;
   }
   if(!mmReady){
@@ -872,7 +1375,7 @@ async function renderMermaid(code, target){
     const res = await mermaid.render(id, code);
     target.innerHTML = res.svg;
   }catch(e){
-    target.innerHTML = '<div class="err">미리보기 오류: ' + esc(e && e.message ? e.message : e) + '</div>';
+    target.innerHTML = __('<div class="err">미리보기 오류: ') + esc(e && e.message ? e.message : e) + '</div>';
     const junk = document.getElementById('d' + id); if(junk) junk.remove();
   }
 }
@@ -936,8 +1439,8 @@ function setBlockType(tag){
   restoreSel();
   const s = getSelection();
   const li = s.rangeCount ? closestEl(s.anchorNode, 'li') : null;
-  if(li){ toast('목록 안에서는 제목을 쓸 수 없습니다'); updateToolbar(); return; }
-  if(s.rangeCount && closestEl(s.anchorNode, '.gh-fold-sum')){ toast('접기 제목 줄의 모양은 바꿀 수 없습니다'); updateToolbar(); return; }
+  if(li){ toast(__('목록 안에서는 제목을 쓸 수 없습니다')); updateToolbar(); return; }
+  if(s.rangeCount && closestEl(s.anchorNode, '.gh-fold-sum')){ toast(__('접기 제목 줄의 모양은 바꿀 수 없습니다')); updateToolbar(); return; }
   const BLK = 'p,h1,h2,h3,h4,h5,h6';
   const was = s.rangeCount ? closestEl(s.anchorNode, BLK) : null;
   const al = was ? was.dataset.align : '';
@@ -967,9 +1470,9 @@ function setAlign(a){
     afterChange();
     return;
   }
-  if(closestEl(node, 'li')){ toast('목록은 정렬할 수 없습니다 (깃허브가 지원하지 않습니다)'); return; }
-  if(closestEl(node, 'pre')){ toast('코드 블록은 정렬할 수 없습니다'); return; }
-  if(closestEl(node, '.gh-fold-sum')){ toast('접기 제목 줄은 정렬할 수 없습니다'); return; }
+  if(closestEl(node, 'li')){ toast(__('목록은 정렬할 수 없습니다 (깃허브가 지원하지 않습니다)')); return; }
+  if(closestEl(node, 'pre')){ toast(__('코드 블록은 정렬할 수 없습니다')); return; }
+  if(closestEl(node, '.gh-fold-sum')){ toast(__('접기 제목 줄은 정렬할 수 없습니다')); return; }
   const BLK = 'p,h1,h2,h3,h4,h5,h6';
   const ok = b => !b.classList.contains('gh-alert-title') && !b.classList.contains('gh-fold-sum') && !b.closest('li,td,th,figure,pre');
   const pick = () => {
@@ -979,7 +1482,7 @@ function setAlign(a){
   };
   let list = pick();
   if(!list.length){ document.execCommand('formatBlock', false, '<p>'); list = pick(); }
-  if(!list.length){ toast('여기는 정렬할 수 없습니다'); return; }
+  if(!list.length){ toast(__('여기는 정렬할 수 없습니다')); return; }
   list.forEach(b => { if(a === 'left') delete b.dataset.align; else b.dataset.align = a; });
   afterChange();
 }
@@ -997,7 +1500,7 @@ function toggleInlineCode(){
     return;
   }
   const r = s.getRangeAt(0);
-  if(r.collapsed){ toast('코드로 바꿀 글자를 먼저 선택하세요'); return; }
+  if(r.collapsed){ toast(__('코드로 바꿀 글자를 먼저 선택하세요')); return; }
   const text = r.toString();
   document.execCommand('insertHTML', false, '<code>' + esc(text) + '</code>&nbsp;');
   afterChange();
@@ -1007,7 +1510,7 @@ function insertLink(){
   restoreSel();
   const s = getSelection();
   const a = s.rangeCount ? closestEl(s.anchorNode, 'a') : null;
-  const url = prompt('링크 주소를 입력하세요', a ? a.getAttribute('href') : 'https://');
+  const url = prompt(__('링크 주소를 입력하세요'), a ? a.getAttribute('href') : 'https://');
   if(url === null) return;
   restoreSel();
   if(a){
@@ -1058,7 +1561,7 @@ function togglePre(){
   restoreSel();
   const s = getSelection();
   const pre = s.rangeCount ? closestEl(s.anchorNode, 'pre') : null;
-  if(s.rangeCount && closestEl(s.anchorNode, '.gh-fold-sum')){ toast('접기 제목 줄은 코드 블록으로 바꿀 수 없습니다. 내용 칸에서 눌러 주세요'); return; }
+  if(s.rangeCount && closestEl(s.anchorNode, '.gh-fold-sum')){ toast(__('접기 제목 줄은 코드 블록으로 바꿀 수 없습니다. 내용 칸에서 눌러 주세요')); return; }
   document.execCommand('formatBlock', false, pre ? '<p>' : '<pre>');
   afterChange();
 }
@@ -1126,7 +1629,7 @@ function toggleList(tag, task){
     let n = first;
     while(n){ blocks.push(n); if(n === last) break; n = n.nextSibling; }
     const usable = blocks.filter(b => b.nodeType === 1 && /^(P|DIV|H[1-6])$/.test(b.tagName) && !b.classList.contains('gh-alert') && !b.classList.contains('gh-fold'));
-    if(!usable.length){ toast('이 자리는 목록으로 바꿀 수 없습니다'); return; }
+    if(!usable.length){ toast(__('이 자리는 목록으로 바꿀 수 없습니다')); return; }
     usable[0].before(nl);
     usable.forEach(b => {
       if(usable.length > 1 && isEmptyBlock(b)){ b.remove(); return; }
@@ -1150,7 +1653,7 @@ function insertTable(rows, cols){
     const tr = document.createElement('tr');
     for(let c = 0; c < cols; c++){
       const cell = document.createElement(r === 0 ? 'th' : 'td');
-      if(r === 0) cell.textContent = '제목'; else cell.appendChild(document.createElement('br'));
+      if(r === 0) cell.textContent = __('제목'); else cell.appendChild(document.createElement('br'));
       tr.appendChild(cell);
     }
     tb.appendChild(tr);
@@ -1194,7 +1697,7 @@ function tpShow(r, c){
   TP.el.querySelectorAll('.tpick-g i').forEach(x => x.classList.toggle('on', +x.dataset.r <= r && +x.dataset.c <= c));
   const l = TP.el.querySelector('.tpick-l');
   l.classList.toggle('idle', !r);
-  l.textContent = r ? '가로 ' + c + '칸 × 세로 ' + r + '줄' : '칸 위를 훑어서 크기를 고르세요';
+  l.textContent = r ? __('가로 {0}칸 × 세로 {1}줄', c, r) : __('칸 위를 훑어서 크기를 고르세요');
 }
 function closeTablePicker(){
   if(TP.el) TP.el.hidden = true;
@@ -1212,11 +1715,11 @@ function openTablePicker(btn){
     box.className = 'tpick';
     box.id = 'tpick';
     box.hidden = true;
-    box.innerHTML = '<div class="tpick-t">표 넣기 <span style="font-weight:500;color:var(--muted)">· 첫 줄은 제목 줄</span></div><div class="tpick-g"></div><div class="tpick-l"></div>' +
-      '<div class="tpick-n"><span>직접 입력</span>' +
-      '<input type="number" id="tpCols" min="1" max="' + TP.limC + '" value="4" title="가로 칸 수 (1~' + TP.limC + ')" aria-label="가로 칸 수"><span>칸 ×</span>' +
-      '<input type="number" id="tpRows" min="1" max="' + TP.limR + '" value="4" title="세로 줄 수 (1~' + TP.limR + ', 제목 줄 포함)" aria-label="세로 줄 수"><span>줄</span>' +
-      '<button class="btn" id="tpGo">넣기</button></div>';
+    box.innerHTML = __('<div class="tpick-t">표 넣기 <span style="font-weight:500;color:var(--muted)">· 첫 줄은 제목 줄</span></div><div class="tpick-g"></div><div class="tpick-l"></div>') +
+      __('<div class="tpick-n"><span>직접 입력</span>') +
+      '<input type="number" id="tpCols" min="1" max="' + TP.limC + __('" value="4" title="가로 칸 수 (1~') + TP.limC + __(')" aria-label="가로 칸 수"><span>칸 ×</span>') +
+      '<input type="number" id="tpRows" min="1" max="' + TP.limR + __('" value="4" title="세로 줄 수 (1~') + TP.limR + __(', 제목 줄 포함)" aria-label="세로 줄 수"><span>줄</span>') +
+      __('<button class="btn" id="tpGo">넣기</button></div>');
     document.body.appendChild(box);
     const grid = box.querySelector('.tpick-g');
     const at = e => { const i = e.target.closest ? e.target.closest('i') : null; return i ? [+i.dataset.r, +i.dataset.c] : null; };
@@ -1259,7 +1762,7 @@ function insertAlert(kind){
   const d = document.createElement('div');
   d.className = 'gh-alert';
   d.dataset.kind = kind;
-  d.innerHTML = '<p class="gh-alert-title" contenteditable="false">' + names[kind] + '</p><p>내용을 입력하세요</p>';
+  d.innerHTML = '<p class="gh-alert-title" contenteditable="false">' + names[kind] + __('</p><p>내용을 입력하세요</p>');
   insertBlock(d, d.lastChild);
 }
 
@@ -1292,8 +1795,8 @@ function toggleFold(){
     return;
   }
   const f = makeFold(), sum = f.firstChild, body = f.lastChild;
-  sum.textContent = '눌러서 펼치기';
-  body.appendChild(newP('내용을 입력하세요'));
+  sum.textContent = __('눌러서 펼치기');
+  body.appendChild(newP(__('내용을 입력하세요')));
   insertBlock(f, sum);
   /* 제목 글자를 선택해 두어 바로 덮어쓸 수 있게 */
   const r = document.createRange();
@@ -1329,7 +1832,7 @@ function tableAct(act){
     let made = null;
     Array.from(table.rows).forEach((r, i) => {
       const c = document.createElement(i === 0 ? 'th' : 'td');
-      c.innerHTML = i === 0 ? '제목' : '<br>';
+      c.innerHTML = i === 0 ? __('제목') : '<br>';
       const ref = act === 'colEnd' ? null : r.cells[ci];
       if(ref) ref.after(c); else r.appendChild(c);
       if(i === ri) made = c;
@@ -1347,7 +1850,7 @@ function tableAct(act){
     }
   }else if(act === 'rowDel'){
     if(table.rows.length <= 2){ table.remove(); }
-    else if(ri === 0){ toast('첫 줄(제목 줄)은 지울 수 없습니다'); return; }
+    else if(ri === 0){ toast(__('첫 줄(제목 줄)은 지울 수 없습니다')); return; }
     else{
       table.deleteRow(ri);
       placeCaret(table.rows[Math.min(ri, table.rows.length - 1)].cells[ci] || table.rows[0].cells[0], true);
@@ -1400,14 +1903,14 @@ window.addEventListener('resize', tfPlace);
 const BLK_SEL = 'table, pre, hr, blockquote, .gh-alert, .gh-fold, ul.task > li';
 const BD = {hover: null, timer: 0, undo: []};
 function blkName(b){
-  if(b.tagName === 'TABLE') return '표';
-  if(b.tagName === 'LI') return '체크 항목';
-  if(b.tagName === 'UL') return '체크 목록';
-  if(b.tagName === 'HR') return '구분선';
-  if(b.tagName === 'BLOCKQUOTE') return '인용';
-  if(b.classList.contains('gh-alert')) return '알림 상자';
-  if(b.classList.contains('gh-fold')) return '접기 블록';
-  return b.classList.contains('raw-md') ? 'HTML 원문' : '코드 블록';
+  if(b.tagName === 'TABLE') return __('표');
+  if(b.tagName === 'LI') return __('체크 항목');
+  if(b.tagName === 'UL') return __('체크 목록');
+  if(b.tagName === 'HR') return __('구분선');
+  if(b.tagName === 'BLOCKQUOTE') return __('인용');
+  if(b.classList.contains('gh-alert')) return __('알림 상자');
+  if(b.classList.contains('gh-fold')) return __('접기 블록');
+  return b.classList.contains('raw-md') ? __('HTML 원문') : __('코드 블록');
 }
 function blkTarget(){
   if(BD.hover && ed.contains(BD.hover)) return BD.hover;
@@ -1419,9 +1922,9 @@ function blkDelPlace(){
   const btn = $('#blkDel'), t = blkTarget();
   if(!t){ btn.hidden = true; return; }
   const host = btn.parentElement.getBoundingClientRect(), r = t.getBoundingClientRect();
-  const label = blkName(t) + ' 지우기';
+  const label = __('{0} 지우기', blkName(t));
   btn.hidden = false;
-  btn.title = label + ' (Ctrl+Z로 되돌릴 수 있습니다)';
+  btn.title = label + __(' (Ctrl+Z로 되돌릴 수 있습니다)');
   btn.setAttribute('aria-label', label);
   btn.style.left = Math.round(r.right - host.left - 11) + 'px';
   /* 구분선은 얇으므로 선 가운데에, 체크 항목은 첫 줄 가운데에, 나머지는 오른쪽 위 모서리에 */
@@ -1472,7 +1975,7 @@ $('#blkDel').addEventListener('click', () => {
   clearTimeout(BD.timer); BD.timer = 0;
   BD.hover = null;
   afterChange();
-  toast(what + ' 지움 · Ctrl+Z로 되살릴 수 있습니다');
+  toast(__('{0} 지움 · Ctrl+Z로 되살릴 수 있습니다', what));
 });
 function blkRestore(){
   const u = BD.undo.pop();
@@ -1702,7 +2205,7 @@ function blocksMd(parent){
       /* 제목은 HTML 태그 안이라 마크다운 기호가 통하지 않으므로 태그로 적고,
          내용은 빈 줄로 띄워서 깃허브가 마크다운으로 읽게 함 */
       const sum = n.querySelector(':scope > .gh-fold-sum'), bodyEl = n.querySelector(':scope > .gh-fold-body');
-      const title = (sum ? clean(inlHtml(sum)) : '') || '펼치기';
+      const title = (sum ? clean(inlHtml(sum)) : '') || __('펼치기');
       const body = bodyEl ? blocksMd(bodyEl).join('\n\n') : '';
       res.push('<details' + (n.dataset.open ? ' open' : '') + '>\n<summary>' + title + '</summary>\n\n' + (body ? body + '\n\n' : '') + '</details>');
     }else if(n.classList.contains('gh-alert')){
@@ -1775,7 +2278,7 @@ function afterChange(opt){
   const shown = d && typeof d.src === 'string' ? d.src : md;
   if(out.value !== shown) out.value = shown;   /* 같으면 건드리지 않아야 코드 칸의 커서가 유지됨 */
   const lines = shown ? shown.split('\n').length - (/\n$/.test(shown) ? 1 : 0) : 0;
-  $('#outInfo').textContent = lines ? lines + '줄' + (d && typeof d.src === 'string' ? ' · 직접 고친 코드' : '') : '';
+  $('#outInfo').textContent = lines ? __('{0}줄', lines) + (d && typeof d.src === 'string' ? __(' · 직접 고친 코드') : '') : '';
   save();
   updateToolbar();
 }
@@ -1804,7 +2307,7 @@ function codeApply(){
   try{ frag = mdToDom(text, {editable: 0, codeOnly: 0, raw: 0}); }catch(e){ frag = null; }
   const fresh = figLazy;
   figLazy = null;
-  if(!frag){ toast('코드를 읽는 중 문제가 생겨 편집 칸에 반영하지 못했습니다'); return; }
+  if(!frag){ toast(__('코드를 읽는 중 문제가 생겨 편집 칸에 반영하지 못했습니다')); return; }
   const seen = [];
   fresh.forEach(f => {
     if(seen.indexOf(f) >= 0) return;
@@ -2042,7 +2545,7 @@ $('#btnCopy').addEventListener('click', async () => {
     out.select();
     document.execCommand('copy');
   }
-  toast('마크다운을 복사했습니다');
+  toast(__('마크다운을 복사했습니다'));
 });
 function downloadText(name, text, type){
   const blob = new Blob([text], {type: type});
@@ -2060,7 +2563,7 @@ function downloadText(name, text, type){
      문서: {id, name:파일 이름(.md 제외), html:편집 화면 내용, savedSig:마지막으로 저장한 마크다운의 지문, dirty}
    ========================================================= */
 const TABS_KEY = 'mdpaint.tabs.v1';
-const BLANK_HTML = '<h1>제목</h1><p><br></p>';
+const BLANK_HTML = __('<h1>제목</h1><p><br></p>');
 const T = {docs: [], active: 0, seq: 0, timer: 0};
 const tabCur = () => T.docs.find(d => d.id === T.active) || null;
 function docSig(md){
@@ -2070,12 +2573,13 @@ function docSig(md){
 }
 /* 파일 이름으로 쓸 수 없는 글자와 끝의 .md 는 뺌 */
 const cleanName = v => String(v == null ? '' : v).replace(/[\\/:*?"<>|\u0000-\u001f]/g, '').replace(/\.(md|markdown)$/i, '').trim().slice(0, 80);
-const tabLabel = d => (d.name || '제목 없음') + '.md';
+const tabLabel = d => (d.name || __('제목 없음')) + '.md';
 function tabsStoreNow(){
   clearTimeout(T.timer); T.timer = 0;
+  if(T.frozen) return;   /* 언어를 바꾸며 예시 문서를 지운 뒤에는 다시 적지 않음 */
   try{
     localStorage.setItem(TABS_KEY, JSON.stringify({active: T.active, seq: T.seq,
-      docs: T.docs.map(d => ({id: d.id, name: d.name, html: d.html, savedSig: d.savedSig, dirty: !!d.dirty, src: typeof d.src === 'string' ? d.src : null}))}));
+      docs: T.docs.map(d => ({id: d.id, name: d.name, html: d.html, savedSig: d.savedSig, dirty: !!d.dirty, src: typeof d.src === 'string' ? d.src : null, sample: d.sample || null}))}));
   }catch(e){ /* 저장 공간이 없거나 막혀 있으면 무시 */ }
 }
 function tabsStore(){
@@ -2094,10 +2598,10 @@ function tabsDraw(){
     t.dataset.id = d.id;
     t.setAttribute('role', 'tab');
     t.setAttribute('aria-selected', on ? 'true' : 'false');
-    const dot = document.createElement('span'); dot.className = 'tab-dot'; dot.textContent = '●'; dot.title = '저장하지 않은 변경이 있습니다';
+    const dot = document.createElement('span'); dot.className = 'tab-dot'; dot.textContent = '●'; dot.title = __('저장하지 않은 변경이 있습니다');
     const nm = document.createElement('span'); nm.className = 'tab-name'; nm.textContent = tabLabel(d);
-    const x = document.createElement('button'); x.className = 'tab-x'; x.textContent = '×'; x.title = '탭 닫기'; x.setAttribute('aria-label', tabLabel(d) + ' 닫기');
-    t.title = tabLabel(d) + (d.dirty ? ' (저장 안 됨)' : '');
+    const x = document.createElement('button'); x.className = 'tab-x'; x.textContent = '×'; x.title = __('탭 닫기'); x.setAttribute('aria-label', __('{0} 닫기', tabLabel(d)));
+    t.title = tabLabel(d) + (d.dirty ? __(' (저장 안 됨)') : '');
     t.appendChild(dot); t.appendChild(nm); t.appendChild(x);
     box.appendChild(t);
   });
@@ -2113,13 +2617,15 @@ function tabsMark(){
     if(!t) return;
     t.classList.toggle('dirty', !!d.dirty);
     t.querySelector('.tab-name').textContent = tabLabel(d);
-    t.title = tabLabel(d) + (d.dirty ? ' (저장 안 됨)' : '');
+    t.title = tabLabel(d) + (d.dirty ? __(' (저장 안 됨)') : '');
   });
 }
 /* 보관해 둔 편집 화면 내용을 다시 띄움: 그림은 그림 정보로 다시 그림 */
 function hydrate(html){
   ed.innerHTML = html;
   ed.querySelectorAll('.dg-block').forEach(f => {
+    /* 그림에 붙는 단추와 설명은 보관할 때의 언어로 남아 있으므로 지금 언어로 다시 만듦 */
+    f.title = f.dataset.gitModel ? __('클릭해서 깃 그래프 수정') : f.dataset.raw ? __('클릭해서 코드 수정') : __('클릭해서 도형 수정');
     if(f.dataset.gitModel){
       let gm = null;
       try{ gm = gitClean(JSON.parse(f.dataset.gitModel)); }catch(e){}
@@ -2131,7 +2637,7 @@ function hydrate(html){
     if(f.dataset.raw){ f.innerHTML = FIG_HTML; setRawFigure(f, f.dataset.code || ''); return; }
     let model = null;
     try{ model = cleanModel(JSON.parse(f.dataset.model)); }catch(e){}
-    if(model) setFigure(f, model); else f.remove();
+    if(model){ f.innerHTML = FIG_HTML; setFigure(f, model); } else f.remove();
   });
 }
 function tabShow(id){
@@ -2188,7 +2694,7 @@ async function docSave(){
   if(typeof window.showSaveFilePicker === 'function'){
     SAVE.busy = true;
     try{
-      const opt = {id: 'mdeditor', suggestedName: d.name + '.md', types: [{description: '마크다운 문서', accept: {'text/markdown': ['.md']}}]};
+      const opt = {id: 'mdeditor', suggestedName: d.name + '.md', types: [{description: __('마크다운 문서'), accept: {'text/markdown': ['.md']}}]};
       if(SAVE.last.get(d.id)) opt.startIn = SAVE.last.get(d.id);
       const h = await window.showSaveFilePicker(opt);
       const w = await h.createWritable();
@@ -2214,8 +2720,8 @@ async function docSave(){
   d.savedSig = docSig(text);
   d.dirty = tabCur() === d ? docSig(out.value) !== d.savedSig : false;
   tabsMark(); tabsStoreNow();
-  toast(picked ? (picked.name || d.name + '.md') + ' 파일로 저장했습니다'
-               : d.name + '.md 파일로 저장했습니다 (이 브라우저는 저장 위치를 고르는 창을 띄울 수 없어 내려받기 폴더에 저장)');
+  toast(picked ? __('{0} 파일로 저장했습니다', picked.name || d.name + '.md')
+               : __('{0}.md 파일로 저장했습니다 (이 브라우저는 저장 위치를 고르는 창을 띄울 수 없어 내려받기 폴더에 저장)', d.name));
   return true;
 }
 function tabRemove(id){
@@ -2248,7 +2754,7 @@ async function tabClose(id){
   if(id === T.active) save();
   if(!d.dirty){ tabRemove(id); return; }
   tabActivate(id);   /* 무엇을 닫는지 보이게 그 탭을 앞으로 */
-  const a = await askSave('"' + tabLabel(d) + '" 문서에 저장하지 않은 변경이 있습니다.');
+  const a = await askSave(__('"{0}" 문서에 저장하지 않은 변경이 있습니다.', tabLabel(d)));
   if(a === 'cancel') return;
   if(a === 'yes' && !(await docSave())) return;   /* 저장 창에서 취소하면 탭을 닫지 않음 */
   tabRemove(id);
@@ -2294,6 +2800,7 @@ function tabsInit(){
       n.savedSig = typeof d.savedSig === 'string' ? d.savedSig.slice(0, 40) : null;
       n.dirty = !!d.dirty;
       n.src = typeof d.src === 'string' ? d.src.slice(0, 3 * 1024 * 1024) : null;
+      n.sample = typeof d.sample === 'string' ? d.sample.slice(0, 40) : null;
       if(d.id === st.active) T.active = n.id;
     });
   }
@@ -2314,6 +2821,7 @@ function tabsInit(){
   sampleDoc();
   afterChange();
   tabSettle();
+  d.sample = d.savedSig;   /* 처음 보여 주는 예시 문서라는 표시 (손대면 지문이 달라져서 풀림) */
   tabsDraw();
 }
 /* ----- 편집 칸과 코드 칸 사이를 끌어서 폭 조절 ----- */
@@ -2365,26 +2873,26 @@ const CW = 150, CH = 84;   /* 격자 한 칸 크기 */
 const SW = 24, SH = 40;    /* 자동 정리 방식에서 크기 한 단계 (편집창 기준 픽셀) */
 const MAXW = 14, MAXH = 6; /* 크기 단계 한계 */
 const SHAPES = {
-  rect:      {label:'사각형',             g:[118, 54]},
-  round:     {label:'둥근 사각형',        g:[118, 54]},
-  stadium:   {label:'알약 모양',          g:[118, 48]},
-  subroutine:{label:'이중 사각형',        g:[118, 54]},
-  cylinder:  {label:'원통 (데이터베이스)', g:[100, 66]},
-  circle:    {label:'원',                 g:[64, 64],  prop:true},
-  dcircle:   {label:'이중 원',            g:[66, 66],  prop:true},
-  diamond:   {label:'마름모',             g:[124, 68], prop:true},
-  hexagon:   {label:'육각형',             g:[124, 54]},
-  para:      {label:'평행사변형',         g:[124, 54]},
-  trap:      {label:'사다리꼴',           g:[124, 54]},
-  triangle:  {label:'삼각형 (자동 정리 전용 · 깃허브 버전에 따라 안 보일 수 있음)',   g:[92, 66], warn:true, prop:true},
-  flip:      {label:'역삼각형 (자동 정리 전용 · 깃허브 버전에 따라 안 보일 수 있음)', g:[92, 66], warn:true, prop:true}
+  rect:      {label:__('사각형'),             g:[118, 54]},
+  round:     {label:__('둥근 사각형'),        g:[118, 54]},
+  stadium:   {label:__('알약 모양'),          g:[118, 48]},
+  subroutine:{label:__('이중 사각형'),        g:[118, 54]},
+  cylinder:  {label:__('원통 (데이터베이스)'), g:[100, 66]},
+  circle:    {label:__('원'),                 g:[64, 64],  prop:true},
+  dcircle:   {label:__('이중 원'),            g:[66, 66],  prop:true},
+  diamond:   {label:__('마름모'),             g:[124, 68], prop:true},
+  hexagon:   {label:__('육각형'),             g:[124, 54]},
+  para:      {label:__('평행사변형'),         g:[124, 54]},
+  trap:      {label:__('사다리꼴'),           g:[124, 54]},
+  triangle:  {label:__('삼각형 (자동 정리 전용 · 깃허브 버전에 따라 안 보일 수 있음)'),   g:[92, 66], warn:true, prop:true},
+  flip:      {label:__('역삼각형 (자동 정리 전용 · 깃허브 버전에 따라 안 보일 수 있음)'), g:[92, 66], warn:true, prop:true}
 };
 const LINES = {
-  arrow:{label:'화살표',        op:'-->'},
-  both: {label:'양방향 화살표', op:'<-->'},
-  line: {label:'선',            op:'---'},
-  thick:{label:'굵은 화살표',   op:'==>'},
-  dot:  {label:'점선 화살표',   op:'-.->'}
+  arrow:{label:__('화살표'),        op:'-->'},
+  both: {label:__('양방향 화살표'), op:'<-->'},
+  line: {label:__('선'),            op:'---'},
+  thick:{label:__('굵은 화살표'),   op:'==>'},
+  dot:  {label:__('점선 화살표'),   op:'-.->'}
 };
 /* 팔레트: 윗줄은 진한 색, 아랫줄은 연한 색 */
 const PALETTE = [
@@ -2528,25 +3036,25 @@ function buildTools(){
   let h = '';
   const btn = (key, title, icon, warn) =>
     '<button class="tool" data-tool="' + key + '" title="' + esc(title) + '"><svg viewBox="0 0 26 22">' + icon + '</svg>' + (warn ? '<span class="w">⚠</span>' : '') + '</button>';
-  h += btn('select', '선택 / 이동', '<path d="M6 2 L6 18 L10.5 14 L13.5 20 L16 19 L13 13 L19 13 Z"/>');
-  h += btn('undo', '되돌리기 (Ctrl+Z)', '<path d="M8 4 L3 9 L8 14"/><path d="M3 9 H15 a6 5 0 0 1 0 10 H10"/>');
-  h += '<div class="lbl">도형</div>';
+  h += btn('select', __('선택 / 이동'), '<path d="M6 2 L6 18 L10.5 14 L13.5 20 L16 19 L13 13 L19 13 Z"/>');
+  h += btn('undo', __('되돌리기 (Ctrl+Z)'), '<path d="M8 4 L3 9 L8 14"/><path d="M3 9 H15 a6 5 0 0 1 0 10 H10"/>');
+  h += __('<div class="lbl">도형</div>');
   Object.keys(SHAPES).forEach(k => {
     const b = ICON[k] || [3, 4, 20, 14];
     h += btn(k, SHAPES[k].label, shapeSvg(k, b[0], b[1], b[2], b[3]), SHAPES[k].warn);
   });
-  h += '<div class="lbl">선</div>';
+  h += __('<div class="lbl">선</div>');
   h += btn('arrow', LINES.arrow.label, '<path d="M3 17 L21 5"/><path d="M14 4.5 L21 5 L18.5 11.5"/>');
   h += btn('both',  LINES.both.label,  '<path d="M4 16 L22 6"/><path d="M15.5 5.5 L22 6 L19.5 12"/><path d="M10.5 16.5 L4 16 L6.5 10"/>');
   h += btn('line',  LINES.line.label,  '<path d="M3 17 L22 5"/>');
   h += btn('thick', LINES.thick.label, '<path d="M3 17 L20 6" style="stroke-width:3.4"/><path d="M13.5 5 L21 5 L18.5 12"/>');
   h += btn('dot',   LINES.dot.label,   '<path d="M3 17 L21 5" style="stroke-dasharray:3 3"/><path d="M14 4.5 L21 5 L18.5 11.5"/>');
-  h += btn('del',   '선택한 것 지우기 (Delete)', '<path d="M5 6 H21"/><path d="M10 6 V3 H16 V6"/><path d="M7 6 L8 20 H18 L19 6"/>');
+  h += btn('del',   __('선택한 것 지우기 (Delete)'), '<path d="M5 6 H21"/><path d="M10 6 V3 H16 V6"/><path d="M7 6 L8 20 H18 L19 6"/>');
   $('#dgTools').innerHTML = h;
 }
 function setTool(t){
   if(SHAPES[t] && SHAPES[t].warn && isGrid()){
-    toast('삼각형은 "자동 정리" 방식에서만 쓸 수 있습니다');
+    toast(__('삼각형은 "자동 정리" 방식에서만 쓸 수 있습니다'));
     return;
   }
   D.tool = t;
@@ -2806,7 +3314,7 @@ function draw(){
     if(grid){
       if(STRETCH[sn.shape]){
         [sn.x - 5, sn.x + sn.w - 5].forEach(hx => {
-          s += '<rect class="hnd" x="' + hx + '" y="' + (sn.y + sn.h / 2 - 13) + '" width="10" height="26" rx="3"><title>좌우로 끌어 폭 조절</title></rect>';
+          s += '<rect class="hnd" x="' + hx + '" y="' + (sn.y + sn.h / 2 - 13) + __('" width="10" height="26" rx="3"><title>좌우로 끌어 폭 조절</title></rect>');
         });
       }
     }else{
@@ -3056,10 +3564,10 @@ function refresh(){
   $('#dgCode').textContent = code;
   const tri = m.nodes.some(n => SHAPES[n.shape].warn);
   const warns = [];
-  if(tri && grid) warns.push('⚠ 격자 배치에는 삼각형이 없어 사각형으로 나옵니다. 삼각형을 쓰려면 "자동 정리"로 바꾸세요.');
-  else if(tri) warns.push('⚠ 삼각형은 최신 머메이드 문법이라 깃허브 버전에 따라 그려지지 않을 수 있습니다.');
+  if(tri && grid) warns.push(__('⚠ 격자 배치에는 삼각형이 없어 사각형으로 나옵니다. 삼각형을 쓰려면 "자동 정리"로 바꾸세요.'));
+  else if(tri) warns.push(__('⚠ 삼각형은 최신 머메이드 문법이라 깃허브 버전에 따라 그려지지 않을 수 있습니다.'));
   const bad = holdIssues(m);
-  if(bad) warns.push('⚠ 위치 유지는 화살표가 모두 ' + (m.dir === 'LR' ? '오른쪽' : '아래쪽') + '으로 향할 때만 맞게 나옵니다. 지금 ' + bad + '개가 같은 줄을 잇거나 거꾸로 향해서 배치가 흐트러질 수 있습니다.');
+  if(bad) warns.push(__('⚠ 위치 유지는 화살표가 모두 {0}으로 향할 때만 맞게 나옵니다. 지금 {1}개가 같은 줄을 잇거나 거꾸로 향해서 배치가 흐트러질 수 있습니다.', m.dir === 'LR' ? __('오른쪽') : __('아래쪽'), bad));
   $('#dgWarn').hidden = !warns.length;
   $('#dgWarn').textContent = warns.join('\n');
   $('#dgOk').disabled = m.nodes.length === 0;
@@ -3068,11 +3576,11 @@ function refresh(){
   $('#dirSeg').hidden = grid;
   $('#flowOpts').hidden = grid;
   $('#optHold').checked = !!m.hold;
-  $('#dgPrevNote').textContent = grid ? '놓은 칸 위치가 그대로 유지됩니다' : m.hold ? '그린 줄과 칸에 맞춰 배치합니다' : '배치는 머메이드가 다시 잡습니다';
+  $('#dgPrevNote').textContent = grid ? __('놓은 칸 위치가 그대로 유지됩니다') : m.hold ? __('그린 줄과 칸에 맞춰 배치합니다') : __('배치는 머메이드가 다시 잡습니다');
   $('#dgHint').textContent = grid
-    ? '도형을 고르고 원하는 칸을 클릭 · 선 도구로 도형에서 도형으로 드래그 · 더블클릭으로 글자 입력(Shift+Enter 줄바꿈) · 드래그로 칸 옮기기 · 좌우 손잡이로 폭 조절'
-    : '도형을 고르고 캔버스에서 드래그 · 선택 후 손잡이로 상하좌우 크기 조절 · 선 도구로 도형에서 도형으로 드래그 · 더블클릭으로 글자 입력(Shift+Enter 줄바꿈)';
-  $('#cvEmpty').innerHTML = grid ? '왼쪽에서 도형을 고르고<br>원하는 칸을 클릭하세요' : '왼쪽에서 도형을 고르고<br>여기에 드래그해서 그리세요';
+    ? __('도형을 고르고 원하는 칸을 클릭 · 선 도구로 도형에서 도형으로 드래그 · 더블클릭으로 글자 입력(Shift+Enter 줄바꿈) · 드래그로 칸 옮기기 · 좌우 손잡이로 폭 조절')
+    : __('도형을 고르고 캔버스에서 드래그 · 선택 후 손잡이로 상하좌우 크기 조절 · 선 도구로 도형에서 도형으로 드래그 · 더블클릭으로 글자 입력(Shift+Enter 줄바꿈)');
+  $('#cvEmpty').innerHTML = grid ? __('왼쪽에서 도형을 고르고<br>원하는 칸을 클릭하세요') : __('왼쪽에서 도형을 고르고<br>여기에 드래그해서 그리세요');
   document.querySelectorAll('#dgTools .tool').forEach(b => {
     const S = SHAPES[b.dataset.tool];
     b.classList.toggle('off', grid && !!S && !!S.warn);
@@ -3080,7 +3588,7 @@ function refresh(){
   updatePalette();
   clearTimeout(prevTimer);
   prevTimer = setTimeout(() => {
-    if(!m.nodes.length){ $('#dgPrev').innerHTML = '<div style="color:#9a968b;padding:24px 0">도형을 그리면 여기에 결과가 보입니다</div>'; return; }
+    if(!m.nodes.length){ $('#dgPrev').innerHTML = __('<div style="color:#9a968b;padding:24px 0">도형을 그리면 여기에 결과가 보입니다</div>'); return; }
     renderMermaid(code, $('#dgPrev')).then(fitPreview);
   }, 180);
 }
@@ -3135,7 +3643,7 @@ $('#dgCopy').addEventListener('click', async () => {
     document.execCommand('copy');
     ta.remove();
   }
-  toast('머메이드 코드를 복사했습니다');
+  toast(__('머메이드 코드를 복사했습니다'));
 });
 window.addEventListener('resize', () => { if(!$('#dg').hidden){ draw(); fitPreview(); } });
 
@@ -3163,7 +3671,7 @@ function editText(kind, id){
   cvText.style.width = Math.max(110, w * D.zoom) + 'px';
   cvText.dataset.mid = mid;
   cvText.value = obj.text || '';
-  cvText.placeholder = kind === 'node' ? '글자 입력' : '선 위 글자';
+  cvText.placeholder = kind === 'node' ? __('글자 입력') : __('선 위 글자');
   cvText.hidden = false;
   fitTextBox();
   D.editing = {kind:kind, id:id};
@@ -3328,7 +3836,7 @@ function endDrag(e){
     const n = newNode(d.shape);
     if(isGrid()){
       const cell = cellAt(p);
-      if(nodeAtCell(cell.c, cell.r)){ toast('이미 도형이 있는 칸입니다'); draw(); return; }
+      if(nodeAtCell(cell.c, cell.r)){ toast(__('이미 도형이 있는 칸입니다')); draw(); return; }
       pushHist();
       setCell(n, cell.c, cell.r);
     }else{
@@ -3379,7 +3887,7 @@ function endDrag(e){
           setCell(n, tc, cell.r);
         }else{
           setCell(n, d.c0, d.r0);
-          toast('놓을 자리가 부족합니다');
+          toast(__('놓을 자리가 부족합니다'));
         }
       }
       pushHist(d.snap); refresh();
@@ -3495,12 +4003,12 @@ function fixModel(model){
   });
   return model;
 }
-const FIG_HTML = '<div class="dg-render"></div><div class="dg-actions"><button data-fig="edit">수정</button><button data-fig="del">삭제</button></div>';
+const FIG_HTML = __('<div class="dg-render"></div><div class="dg-actions"><button data-fig="edit">수정</button><button data-fig="del">삭제</button></div>');
 function makeFigure(model){
   const f = document.createElement('figure');
   f.className = 'dg-block';
   f.contentEditable = 'false';
-  f.title = '클릭해서 도형 수정';
+  f.title = __('클릭해서 도형 수정');
   f.innerHTML = FIG_HTML;
   setFigure(f, model);
   return f;
@@ -3629,13 +4137,13 @@ function figureCode(f){
    코드로 넣는 머메이드 블록 (깃 그래프처럼 도형으로 그릴 수 없는 종류, 불러온 남의 그림)
    ========================================================= */
 const MC = {target: null, timer: null};
-const MC_SAMPLE = 'sequenceDiagram\n    participant 사용자\n    participant 서버\n    사용자->>서버: 로그인 요청\n    서버-->>사용자: 토큰 발급';
+const MC_SAMPLE = __('sequenceDiagram\n    participant 사용자\n    participant 서버\n    사용자->>서버: 로그인 요청\n    서버-->>사용자: 토큰 발급');
 function makeRawFigure(code){
   const f = document.createElement('figure');
   f.className = 'dg-block';
   f.contentEditable = 'false';
   f.dataset.raw = '1';
-  f.title = '클릭해서 코드 수정';
+  f.title = __('클릭해서 코드 수정');
   f.innerHTML = FIG_HTML;
   setRawFigure(f, code);
   return f;
@@ -3677,7 +4185,7 @@ $('#mcText').addEventListener('keydown', e => {
 $('#mcCancel').addEventListener('click', closeCode);
 $('#mcOk').addEventListener('click', () => {
   const code = $('#mcText').value.trim();
-  if(!code){ toast('코드가 비어 있습니다'); return; }
+  if(!code){ toast(__('코드가 비어 있습니다')); return; }
   const target = MC.target;
   closeCode();
   const git = gitLooks(code) ? gitParse(code) : null;   /* 깃 그래프 코드면 시각 편집 블록으로 */
@@ -4221,18 +4729,18 @@ function importMarkdown(text, name){
   tabSettle();
   tabsDraw();
   window.scrollTo(0, 0);
-  const parts = ['불러왔습니다'];
-  if(stat.editable) parts.push('편집 가능한 그림 ' + stat.editable + '개');
-  if(stat.codeOnly) parts.push('코드로 편집하는 그림 ' + stat.codeOnly + '개');
-  if(stat.raw) parts.push('HTML 원문 ' + stat.raw + '곳');
+  const parts = [__('불러왔습니다')];
+  if(stat.editable) parts.push(__('편집 가능한 그림 {0}개', stat.editable));
+  if(stat.codeOnly) parts.push(__('코드로 편집하는 그림 {0}개', stat.codeOnly));
+  if(stat.raw) parts.push(__('HTML 원문 {0}곳', stat.raw));
   toast(parts.join(' · '));
 }
 function readMdFile(file){
   if(!file) return;
-  if(file.size > 3 * 1024 * 1024){ toast('파일이 너무 큽니다 (3MB 이하)'); return; }
+  if(file.size > 3 * 1024 * 1024){ toast(__('파일이 너무 큽니다 (3MB 이하)')); return; }
   const fr = new FileReader();
   fr.onload = () => importMarkdown(String(fr.result || ''), file.name);
-  fr.onerror = () => toast('파일을 읽지 못했습니다');
+  fr.onerror = () => toast(__('파일을 읽지 못했습니다'));
   fr.readAsText(file);
 }
 $('#btnOpen').addEventListener('click', () => { $('#fileOpen').value = ''; $('#fileOpen').click(); });
@@ -4246,7 +4754,7 @@ document.addEventListener('drop', e => {
   if(!f) return;
   e.preventDefault();
   if(/\.(md|markdown|mdown|txt)$/i.test(f.name) || /^text\//.test(f.type)) readMdFile(f);
-  else toast('마크다운(.md) 파일만 불러올 수 있습니다');
+  else toast(__('마크다운(.md) 파일만 불러올 수 있습니다'));
 });
 $('#optEmbed').addEventListener('change', e => {
   try{ localStorage.setItem(EMBED_KEY, e.target.checked ? '1' : '0'); }catch(err){}
@@ -4307,32 +4815,32 @@ function gitSim(items){
   for(let i = 0; i < items.length; i++){
     const it = items[i];
     if(it.t === 'branch'){
-      if(!it.name) return fail('브랜치 이름이 비어 있습니다', it);
-      if(br[it.name]) return fail('같은 이름의 브랜치가 이미 있습니다: ' + it.name, it);
+      if(!it.name) return fail(__('브랜치 이름이 비어 있습니다'), it);
+      if(br[it.name]) return fail(__('같은 이름의 브랜치가 이미 있습니다: ') + it.name, it);
       const p = br[it.from];
-      if(!p) return fail('갈라져 나올 브랜치가 아직 없습니다: ' + it.from, it);
+      if(!p) return fail(__('갈라져 나올 브랜치가 아직 없습니다: ') + it.from, it);
       /* origin: 이 브랜치가 갈라져 나온 커밋 (없으면 어디에도 이어지지 않은 줄) */
       br[it.name] = {name: it.name, head: p.head, origin: p.head, n: 0, lane: lanes.length, order: typeof it.order === 'number' ? it.order : 0};
       lanes.push(it.name);
       continue;
     }
     const b = br[it.b];
-    if(!b) return fail('브랜치가 갈라져 나온 커밋보다 앞에는 그 브랜치의 커밋을 둘 수 없습니다', it);
+    if(!b) return fail(__('브랜치가 갈라져 나온 커밋보다 앞에는 그 브랜치의 커밋을 둘 수 없습니다'), it);
     let parent2 = null;
     if(it.t === 'merge'){
       const s = br[it.src];
-      if(!s) return fail('병합할 브랜치가 아직 없습니다: ' + it.src, it);
-      if(it.src === it.b) return fail('자기 자신에게는 병합할 수 없습니다', it);
-      if(!s.head || !b.head) return fail('커밋이 없는 브랜치는 병합할 수 없습니다', it);
-      if(s.head === b.head) return fail('두 브랜치의 끝이 같아서 병합할 내용이 없습니다', it);
+      if(!s) return fail(__('병합할 브랜치가 아직 없습니다: ') + it.src, it);
+      if(it.src === it.b) return fail(__('자기 자신에게는 병합할 수 없습니다'), it);
+      if(!s.head || !b.head) return fail(__('커밋이 없는 브랜치는 병합할 수 없습니다'), it);
+      if(s.head === b.head) return fail(__('두 브랜치의 끝이 같아서 병합할 내용이 없습니다'), it);
       parent2 = s.head;
     }else if(it.t === 'cherry'){
       const src = commits.find(c => c.it.id && c.it.id === it.ref);
-      if(!src) return fail('체리픽할 커밋을 찾을 수 없습니다: ' + it.ref, it);
-      if(src.b === it.b) return fail('같은 브랜치의 커밋은 체리픽할 수 없습니다', it);
-      if(!b.head) return fail('커밋이 없는 브랜치에는 체리픽할 수 없습니다', it);
+      if(!src) return fail(__('체리픽할 커밋을 찾을 수 없습니다: ') + it.ref, it);
+      if(src.b === it.b) return fail(__('같은 브랜치의 커밋은 체리픽할 수 없습니다'), it);
+      if(!b.head) return fail(__('커밋이 없는 브랜치에는 체리픽할 수 없습니다'), it);
     }else if(it.t !== 'commit'){
-      return fail('알 수 없는 항목입니다', it);
+      return fail(__('알 수 없는 항목입니다'), it);
     }
     const c = {it: it, b: it.b, lane: b.lane, parent: b.head, parent2: parent2, seq: commits.length, first: b.n === 0};
     commits.push(c);
@@ -4631,7 +5139,7 @@ function gitDraw(){
     const lb = L.label(L.ln);
     s += band(L.ln, 'gdrop') +
       '<rect class="gghost" x="' + lb.x + '" y="' + lb.y + '" width="' + lb.w + '" height="' + lb.h + '" rx="6"/>' +
-      '<text class="gghostt" x="' + (lb.x + lb.w / 2) + '" y="' + (lb.y + lb.h / 2) + '" text-anchor="middle" dominant-baseline="central">새 브랜치</text>';
+      '<text class="gghostt" x="' + (lb.x + lb.w / 2) + '" y="' + (lb.y + lb.h / 2) + __('" text-anchor="middle" dominant-baseline="central">새 브랜치</text>');
   }
   /* 이름표를 끌어 순서를 바꾸는 중: 끼워질 자리에 굵은 선 */
   if(dragging && G.press.kind === 'b' && G.press.index != null){
@@ -4674,7 +5182,7 @@ function gitDraw(){
     const sel = G.sel && G.sel.l === key;
     s += '<g class="gxl' + (sel ? ' sel' : '') + '" data-l="' + key + '"><path class="glhit" d="' + curve(l.p, l.c) + '"/>' +
       line(l.p, l.c, col(l.kind === 'o' ? l.c.lane : l.p.lane), false, !!fresh[l.c.it.k]) +
-      xbtn((a.x + b.x) / 2, (a.y + b.y) / 2, 'data-ul="' + key + '"', '이 선 끊기') + '</g>';
+      xbtn((a.x + b.x) / 2, (a.y + b.y) / 2, 'data-ul="' + key + '"', __('이 선 끊기')) + '</g>';
   });
   /* 커밋을 넣을 수 있는 칸: 마우스가 올라간 줄에 흐린 점선으로 표시 */
   if(hov >= 0){
@@ -4682,7 +5190,7 @@ function gitDraw(){
       if(sl >= L.n) return;   /* 맨 끝은 항상 보이는 + 단추 */
       const q = L.pt(sl - 0.5, hov);
       s += '<g class="gslot" data-slot="' + hov + ':' + sl + '"><circle class="h" cx="' + q.x + '" cy="' + q.y + '" r="11"/>' +
-        '<circle class="v" cx="' + q.x + '" cy="' + q.y + '" r="7.5"/><path d="' + plus(q.x, q.y, 4) + '"/><title>여기에 커밋 추가</title></g>';
+        '<circle class="v" cx="' + q.x + '" cy="' + q.y + '" r="7.5"/><path d="' + plus(q.x, q.y, 4) + __('"/><title>여기에 커밋 추가</title></g>');
     });
   }
   /* 끄는 중: 놓을 수 있는 자리들을 흐리게, 지금 붙을 자리는 진하게 */
@@ -4707,7 +5215,7 @@ function gitDraw(){
     if(it.t === 'merge') s += '<circle cx="' + x + '" cy="' + y + '" r="5" style="fill:#fff"/>';
     if(it.type === 'REVERSE') s += '<path d="M ' + (x - 5) + ' ' + (y - 5) + ' L ' + (x + 5) + ' ' + (y + 5) + ' M ' + (x + 5) + ' ' + (y - 5) + ' L ' + (x - 5) + ' ' + (y + 5) + '" style="stroke:#fff;stroke-width:2.4;fill:none"/>';
     s += '</g>';
-    const name = it.t === 'cherry' ? '체리픽: ' + it.ref : (it.id || '(자동 번호)');
+    const name = it.t === 'cherry' ? __('체리픽: ') + it.ref : (it.id || __('(자동 번호)'));
     const ncls = 'gname' + (it.id || it.t === 'cherry' ? '' : ' auto');
     if(!L.vert){
       s += '<text class="' + ncls + '" x="' + x + '" y="' + (y + 27) + '" text-anchor="middle">' + esc(cut(name, 9)) + '</text>';
@@ -4725,8 +5233,8 @@ function gitDraw(){
              '<text class="gtagt" x="' + (x + 21 + tw / 2) + '" y="' + (y + 15.5) + '" text-anchor="middle">' + esc(cut(it.tag, 10)) + '</text>';
       }
     }
-    s += '<circle class="ghit" cx="' + x + '" cy="' + y + '" r="18"/><title>' + esc(name) + ' — 다른 커밋이나 빈 칸으로 끌면 이어 붙이기, 같은 줄에서 끌면 자리 옮기기</title>' +
-      xbtn(x + 13, y - 13, 'data-delc="' + it.k + '"', '커밋 삭제') + '</g>';
+    s += '<circle class="ghit" cx="' + x + '" cy="' + y + '" r="18"/><title>' + esc(name) + __(' — 다른 커밋이나 빈 칸으로 끌면 이어 붙이기, 같은 줄에서 끌면 자리 옮기기</title>') +
+      xbtn(x + 13, y - 13, 'data-delc="' + it.k + '"', __('커밋 삭제')) + '</g>';
   });
   /* 브랜치 이름표와 + 버튼 */
   lanes.forEach((name, i) => {
@@ -4735,10 +5243,10 @@ function gitDraw(){
     s += '<g class="gbranch' + (sel ? ' sel' : '') + '" data-b="' + esc(name) + '">' +
       '<rect x="' + lb.x + '" y="' + lb.y + '" width="' + lb.w + '" height="' + lb.h + '" rx="6" style="fill:' + color + '"/>' +
       '<text x="' + (lb.x + lb.w / 2) + '" y="' + (lb.y + lb.h / 2) + '" text-anchor="middle" dominant-baseline="central" style="fill:' + autoText(color) + '">' + esc(cut(name, 11)) + '</text>' +
-      '<title>' + esc(name) + ' — 눌러서 이름·색 바꾸기' + (name === 'main' ? '' : ', 끌어서 줄 순서 바꾸기') + '</title>' +
-      (name === 'main' ? '' : xbtn(lb.x + lb.w - 1, lb.y + 1, 'data-delb="' + esc(name) + '"', '브랜치 삭제')) + '</g>';
+      '<title>' + esc(name) + __(' — 눌러서 이름·색 바꾸기') + (name === 'main' ? '' : __(', 끌어서 줄 순서 바꾸기')) + '</title>' +
+      (name === 'main' ? '' : xbtn(lb.x + lb.w - 1, lb.y + 1, 'data-delb="' + esc(name) + '"', __('브랜치 삭제'))) + '</g>';
     s += '<g class="gplus" data-plus="' + esc(name) + '"><circle cx="' + e.x + '" cy="' + e.y + '" r="12"/>' +
-      '<path d="' + plus(e.x, e.y, 5) + '"/><title>' + esc(name) + ' 끝에 커밋 추가</title></g>';
+      '<path d="' + plus(e.x, e.y, 5) + '"/><title>' + __('{0} 끝에 커밋 추가', esc(name)) + '</title></g>';
   });
   /* 지금 놓으면 붙을 자리 */
   if(tg && tg.ok){
@@ -4805,33 +5313,33 @@ function gitInspector(){
   const box = $('#ggInsp');
   const it = G.sel && G.sel.c != null ? gitItem(G.sel.c) : null;
   const lk = G.sel && G.sel.l ? gitLinks(G.sim).find(l => l.c.it.k + ':' + l.kind === G.sel.l) : null;
-  const cname = c => c.it.t === 'cherry' ? '체리픽' : (c.it.id || '(자동 번호)');
+  const cname = c => c.it.t === 'cherry' ? __('체리픽') : (c.it.id || __('(자동 번호)'));
   let h = '';
   if(it){
     const cherry = it.t === 'cherry';
-    h += '<b class="gi-t">' + (it.t === 'merge' ? '병합 커밋' : cherry ? '체리픽' : '커밋') + '</b>';
-    if(!cherry) h += '<label>이름 <input id="giId" value="' + esc(it.id || '') + '" maxlength="40" placeholder="(자동 번호)"></label>';
-    h += '<label>태그 <input id="giTag" class="short" value="' + esc(it.tag || '') + '" maxlength="24" placeholder="v1.0"></label>';
-    if(!cherry) h += '<label>모양 <select id="giType"><option value="NORMAL">보통</option><option value="HIGHLIGHT">강조 (네모)</option><option value="REVERSE">되돌림 (X)</option></select></label>';
-    h += '<span class="gi-sep"></span><button class="btn" data-ga="left" title="순서를 한 칸 앞으로">◀ 앞으로</button><button class="btn" data-ga="right" title="순서를 한 칸 뒤로">뒤로 ▶</button>';
-    h += '<span class="gi-sep"></span><button class="btn" data-ga="del">삭제</button>';
+    h += '<b class="gi-t">' + (it.t === 'merge' ? __('병합 커밋') : cherry ? __('체리픽') : __('커밋')) + '</b>';
+    if(!cherry) h += __('<label>이름 <input id="giId" value="') + esc(it.id || '') + __('" maxlength="40" placeholder="(자동 번호)"></label>');
+    h += __('<label>태그 <input id="giTag" class="short" value="') + esc(it.tag || '') + '" maxlength="24" placeholder="v1.0"></label>';
+    if(!cherry) h += __('<label>모양 <select id="giType"><option value="NORMAL">보통</option><option value="HIGHLIGHT">강조 (네모)</option><option value="REVERSE">되돌림 (X)</option></select></label>');
+    h += __('<span class="gi-sep"></span><button class="btn" data-ga="left" title="순서를 한 칸 앞으로">◀ 앞으로</button><button class="btn" data-ga="right" title="순서를 한 칸 뒤로">뒤로 ▶</button>');
+    h += __('<span class="gi-sep"></span><button class="btn" data-ga="del">삭제</button>');
   }else if(G.sel && G.sel.b){
     const main = G.sel.b === 'main';
     const mine = (G.model.colors || {})[G.sel.b] || '';
     const shown = gitLaneColor(Math.max(0, G.sim.lanes.indexOf(G.sel.b)));
-    h += '<b class="gi-t">브랜치</b><label>이름 <input id="giBn" value="' + esc(G.sel.b) + '" maxlength="40"' + (main ? ' disabled title="main은 이름을 바꿀 수 없습니다"' : '') + '></label>';
+    h += __('<b class="gi-t">브랜치</b><label>이름 <input id="giBn" value="') + esc(G.sel.b) + '" maxlength="40"' + (main ? __(' disabled title="main은 이름을 바꿀 수 없습니다"') : '') + '></label>';
     h += '<span class="gi-colors">' + PALETTE.map(c =>
       '<button class="sw' + (c === mine ? ' on' : '') + '" data-gc="' + c + '" title="' + c + '" style="background:' + c + '"></button>').join('') + '</span>';
-    h += '<label class="pal-custom" title="다른 색 고르기"><input type="color" id="giColor" value="' + (GIT_HEX.test(shown) ? shown : '#000000') + '"></label>';
-    h += '<button class="btn' + (mine ? '' : ' on') + '" data-gc="" title="머메이드 기본색으로 되돌립니다">기본색</button>';
-    if(!main) h += '<span class="gi-sep"></span><button class="btn" data-ga="delb" title="이 브랜치와 그 안의 커밋을 지웁니다">브랜치 삭제</button>';
+    h += __('<label class="pal-custom" title="다른 색 고르기"><input type="color" id="giColor" value="') + (GIT_HEX.test(shown) ? shown : '#000000') + '"></label>';
+    h += '<button class="btn' + (mine ? '' : ' on') + __('" data-gc="" title="머메이드 기본색으로 되돌립니다">기본색</button>');
+    if(!main) h += __('<span class="gi-sep"></span><button class="btn" data-ga="delb" title="이 브랜치와 그 안의 커밋을 지웁니다">브랜치 삭제</button>');
   }else if(lk){
-    h += '<b class="gi-t">' + (lk.kind === 'o' ? '갈라진 선' : '병합선') + '</b><span class="gi-hint">' + esc(cname(lk.p)) + ' (' + esc(lk.p.b) + ') → ' + esc(cname(lk.c)) + ' (' + esc(lk.c.b) + ')</span>' +
-      '<button class="btn" data-ga="unlink">선 끊기</button>';
+    h += '<b class="gi-t">' + (lk.kind === 'o' ? __('갈라진 선') : __('병합선')) + '</b><span class="gi-hint">' + esc(cname(lk.p)) + ' (' + esc(lk.p.b) + ') → ' + esc(cname(lk.c)) + ' (' + esc(lk.c.b) + ')</span>' +
+      __('<button class="btn" data-ga="unlink">선 끊기</button>');
   }else{
-    h += '<span class="gi-hint">줄 위의 점선 칸을 눌러 커밋 추가 · 커밋을 다른 커밋이나 빈 칸으로 끌어 이어 붙이기 · 선·커밋·이름표에 마우스를 올리면 × 로 삭제</span>';
+    h += __('<span class="gi-hint">줄 위의 점선 칸을 눌러 커밋 추가 · 커밋을 다른 커밋이나 빈 칸으로 끌어 이어 붙이기 · 선·커밋·이름표에 마우스를 올리면 × 로 삭제</span>');
   }
-  box.innerHTML = h + '<span class="gi-fill"></span><button class="btn" data-ga="undo" title="되돌리기 (Ctrl+Z)">↶ 되돌리기</button>';
+  box.innerHTML = h + __('<span class="gi-fill"></span><button class="btn" data-ga="undo" title="되돌리기 (Ctrl+Z)">↶ 되돌리기</button>');
   if(it && $('#giType')) $('#giType').value = GIT_TYPES[it.type] ? it.type : 'NORMAL';
 }
 function gitFit(){
@@ -4851,9 +5359,9 @@ function gitRefresh(){
   $('#ggCode').textContent = code;
   document.querySelectorAll('#ggDir button').forEach(b => b.classList.toggle('on', b.dataset.dir === (m.dir || 'LR')));
   const warns = [];
-  if(m.dir === 'TB' || m.dir === 'BT') warns.push('⚠ 세로 방향은 비교적 새 문법이라 깃허브 버전에 따라 가로로 나오거나 그려지지 않을 수 있습니다.');
-  if(m.colors && Object.keys(m.colors).length) warns.push('⚠ 브랜치 색은 코드 첫 줄의 테마 설정(%%{init}%%)으로 들어갑니다. 보는 곳의 머메이드 설정에 따라 기본색으로 보일 수 있습니다.');
-  if(G.sim && G.sim.lanes.length > 8 && m.colors && Object.keys(m.colors).length) warns.push('⚠ 머메이드는 줄 색을 8개까지만 구분합니다. 9번째 줄부터는 1번째 줄과 같은 색을 씁니다.');
+  if(m.dir === 'TB' || m.dir === 'BT') warns.push(__('⚠ 세로 방향은 비교적 새 문법이라 깃허브 버전에 따라 가로로 나오거나 그려지지 않을 수 있습니다.'));
+  if(m.colors && Object.keys(m.colors).length) warns.push(__('⚠ 브랜치 색은 코드 첫 줄의 테마 설정(%%{init}%%)으로 들어갑니다. 보는 곳의 머메이드 설정에 따라 기본색으로 보일 수 있습니다.'));
+  if(G.sim && G.sim.lanes.length > 8 && m.colors && Object.keys(m.colors).length) warns.push(__('⚠ 머메이드는 줄 색을 8개까지만 구분합니다. 9번째 줄부터는 1번째 줄과 같은 색을 씁니다.'));
   $('#ggWarn').hidden = !warns.length;
   $('#ggWarn').textContent = warns.join('\n');
   $('#ggZoom .zv').textContent = Math.round(G.pzoom * 100) + '%';
@@ -4898,7 +5406,7 @@ function gitEdit(fn, watch){
     G.sim.commits.forEach(c => { alive[c.it.k] = true; });
     gitLinks(G.sim).forEach(l => { now[l.p.it.k + '>' + l.c.it.k] = true; });
     if(before.some(l => alive[l.p] && alive[l.c] && !now[l.p + '>' + l.c]))
-      toast('머메이드 규칙에 따라 선이 옮겨졌습니다: 병합선은 그 줄의 마지막 커밋에서, 갈라진 선은 그 줄의 첫 커밋으로 이어집니다');
+      toast(__('머메이드 규칙에 따라 선이 옮겨졌습니다: 병합선은 그 줄의 마지막 커밋에서, 갈라진 선은 그 줄의 첫 커밋으로 이어집니다'));
   }
   return ok;
 }
@@ -4912,8 +5420,8 @@ function gitNewLabel(g){
   const used = {};
   g.commits.forEach(c => { if(c.id) used[c.id] = true; });
   let n = g.commits.length + 1;
-  while(used['커밋 ' + n]) n++;
-  return '커밋 ' + n;
+  while(used[__('커밋 ') + n]) n++;
+  return __('커밋 ') + n;
 }
 function gitNewCommit(g, m, branch){
   return {k: ++m.seq, t: 'commit', b: branch, id: gitNewLabel(g), tag: '', type: 'NORMAL'};
@@ -4943,15 +5451,15 @@ function gitRepair(g){
    머메이드가 정말 그 두 커밋 사이에 선을 그리는지 확인. 안 되면 이유(문자열)를 돌려줌 */
 function gitLinkMut(g, ak, bk){
   const ia = g.commits.findIndex(c => c.k === ak), ib = g.commits.findIndex(c => c.k === bk);
-  if(ia < 0 || ib < 0 || ia === ib) return '커밋을 찾을 수 없습니다';
+  if(ia < 0 || ib < 0 || ia === ib) return __('커밋을 찾을 수 없습니다');
   const p = g.commits[Math.min(ia, ib)], c = g.commits[Math.max(ia, ib)];
-  if(p.b === c.b) return '같은 줄의 커밋은 머메이드가 순서대로 이어 줍니다';
-  if(c.t === 'cherry') return '체리픽 커밋은 다른 선을 받을 수 없습니다';
+  if(p.b === c.b) return __('같은 줄의 커밋은 머메이드가 순서대로 이어 줍니다');
+  if(c.t === 'cherry') return __('체리픽 커밋은 다른 선을 받을 수 없습니다');
   const first = g.commits.find(x => x.b === c.b) === c;
-  if(first && c.b === 'main') return 'main의 첫 커밋은 다른 줄에서 선을 받을 수 없습니다 (머메이드에서 main은 항상 뿌리입니다)';
+  if(first && c.b === 'main') return __('main의 첫 커밋은 다른 줄에서 선을 받을 수 없습니다 (머메이드에서 main은 항상 뿌리입니다)');
   if(first){
     const b = g.branches.find(x => x.name === c.b);
-    if(!b) return '브랜치를 찾을 수 없습니다';
+    if(!b) return __('브랜치를 찾을 수 없습니다');
     b.origin = p.k;
   }else{
     c.t = 'merge'; c.src = p.b;
@@ -4963,7 +5471,7 @@ function gitLinkMut(g, ak, bk){
   const sc = sim.commits.find(x => x.it.k === c.k);
   const got = first ? sc.parent : sc.parent2;
   if(!got || got.it.k !== p.k){
-    return '병합선은 그 시점에 그 줄의 마지막 커밋에서만 나올 수 있습니다 (머메이드 규칙)' + (got && got.it.id ? ' → 「' + got.it.id + '」에서 끌어 주세요' : '');
+    return __('병합선은 그 시점에 그 줄의 마지막 커밋에서만 나올 수 있습니다 (머메이드 규칙)') + (got && got.it.id ? __(' → 「{0}」에서 끌어 주세요', got.it.id) : '');
   }
 }
 function gitScrollEnd(){
@@ -5002,7 +5510,7 @@ function gitNewBranch(){
 /* 커밋을 새 줄 자리로 끌었을 때: 그 커밋에서 갈라져 나온 새 브랜치와 첫 커밋 */
 function gitDragNew(k){
   const ok = gitEdit((g, m) => {
-    if(!g.commits.some(c => c.k === k)) return '커밋을 찾을 수 없습니다';
+    if(!g.commits.some(c => c.k === k)) return __('커밋을 찾을 수 없습니다');
     const name = gitNewName(g);
     g.branches.push({k: ++m.seq, name: name, origin: k});
     g.lanes.push(name);
@@ -5039,7 +5547,7 @@ function gitLink(ak, tg){
 function gitUnlink(ck, kind){
   gitEdit(g => {
     const c = g.commits.find(x => x.k === ck);
-    if(!c) return '커밋을 찾을 수 없습니다';
+    if(!c) return __('커밋을 찾을 수 없습니다');
     if(kind === 'o'){
       const b = g.branches.find(x => x.name === c.b);
       if(b) b.origin = null;
@@ -5051,7 +5559,7 @@ function gitUnlink(ck, kind){
 /* 이름표를 끌어 줄 순서 바꾸기. index: 지금 줄 번호 기준으로 몇 번째 줄 앞에 놓는지 */
 function gitReorder(name, index){
   gitEdit(g => {
-    if(name === 'main') return 'main은 머메이드 규칙상 항상 첫 줄입니다';
+    if(name === 'main') return __('main은 머메이드 규칙상 항상 첫 줄입니다');
     const lanes = ['main'].concat(g.lanes);
     const cur = lanes.indexOf(name);
     if(cur < 0 || index == null) return;
@@ -5068,9 +5576,9 @@ function gitReorder(name, index){
 function gitMoveTo(k, slot){
   gitEdit(g => {
     const q = g.commits.findIndex(c => c.k === k);
-    if(q < 0) return '커밋을 찾을 수 없습니다';
-    if(slot < 0) return '이미 맨 앞입니다';
-    if(slot > g.commits.length) return '이미 맨 뒤입니다';
+    if(q < 0) return __('커밋을 찾을 수 없습니다');
+    if(slot < 0) return __('이미 맨 앞입니다');
+    if(slot > g.commits.length) return __('이미 맨 뒤입니다');
     if(slot === q || slot === q + 1) return;
     const c = g.commits.splice(q, 1)[0];
     g.commits.splice(slot > q ? slot - 1 : slot, 0, c);
@@ -5087,8 +5595,8 @@ function gitDelete(k){
   const sim = G.sim;
   gitEdit(g => {
     const victim = g.commits.find(c => c.k === k);
-    if(!victim) return '커밋을 찾을 수 없습니다';
-    if(g.commits.length <= 1) return '커밋이 하나는 있어야 합니다';
+    if(!victim) return __('커밋을 찾을 수 없습니다');
+    if(g.commits.length <= 1) return __('커밋이 하나는 있어야 합니다');
     const kids = {};
     sim.commits.forEach(c => { if(c.parent2 && c.parent2.it.k === k) kids[c.it.k] = true; });
     g.commits = g.commits.filter(c => c.k !== k);
@@ -5103,11 +5611,11 @@ function gitDelete(k){
 }
 function gitDeleteBranch(name){
   gitEdit((g, m) => {
-    if(name === 'main') return 'main은 지울 수 없습니다';
+    if(name === 'main') return __('main은 지울 수 없습니다');
     const gone = {};
     let left = 0;
     g.commits.forEach(c => { if(c.b === name) gone[c.k] = true; else left++; });
-    if(!left) return '커밋이 하나는 있어야 합니다. 다른 줄에 커밋을 먼저 만들어 주세요';
+    if(!left) return __('커밋이 하나는 있어야 합니다. 다른 줄에 커밋을 먼저 만들어 주세요');
     g.commits = g.commits.filter(c => !gone[c.k]);
     g.commits.forEach(c => { if(c.t === 'merge' && c.src === name) gitPlain(c); });
     g.branches = g.branches.filter(b => b.name !== name);
@@ -5121,10 +5629,10 @@ function gitDeleteBranch(name){
 function gitRename(oldName, rawName){
   gitApply(m => {
     const name = gitBranchName(rawName);
-    if(!name) return '브랜치 이름을 입력하세요';
+    if(!name) return __('브랜치 이름을 입력하세요');
     if(name === oldName) return;
-    if(oldName === 'main') return 'main은 이름을 바꿀 수 없습니다';
-    if(name === 'main' || m.items.some(it => it.t === 'branch' && it.name === name)) return '같은 이름의 브랜치가 이미 있습니다: ' + name;
+    if(oldName === 'main') return __('main은 이름을 바꿀 수 없습니다');
+    if(name === 'main' || m.items.some(it => it.t === 'branch' && it.name === name)) return __('같은 이름의 브랜치가 이미 있습니다: ') + name;
     m.items.forEach(it => {
       if(it.t === 'branch'){ if(it.name === oldName) it.name = name; if(it.from === oldName) it.from = name; }
       else{ if(it.b === oldName) it.b = name; if(it.src === oldName) it.src = name; }
@@ -5144,10 +5652,10 @@ function gitSetColor(name, color){
 function gitSetField(k, field, value){
   gitApply(m => {
     const it = m.items.find(x => x.k === k);
-    if(!it) return '선택한 커밋이 없습니다';
+    if(!it) return __('선택한 커밋이 없습니다');
     if(field === 'id'){
       const v = gitQ(value).slice(0, 40);
-      if(v && m.items.some(x => x !== it && x.id === v)) return '같은 이름의 커밋이 이미 있습니다: ' + v;
+      if(v && m.items.some(x => x !== it && x.id === v)) return __('같은 이름의 커밋이 이미 있습니다: ') + v;
       /* 이 커밋을 체리픽으로 가리키던 곳도 함께 바꿈 */
       if(it.id) m.items.forEach(x => { if(x.t === 'cherry' && x.ref === it.id) x.ref = v || x.ref; });
       it.id = v;
@@ -5219,7 +5727,7 @@ function gitDragTarget(p, d){
   if(!best || best.dist > 1){
     if(same) return {type: 'none', ok: false, lane: li, cands: best ? cands : null};
     return {type: 'link', lane: li, name: name, ok: false, far: !!best, cands: best ? cands : null,
-      why: near && !near.c.ok ? near.c.why : (best ? '' : '여기에는 이어 붙일 수 없습니다')};
+      why: near && !near.c.ok ? near.c.why : (best ? '' : __('여기에는 이어 붙일 수 없습니다'))};
   }
   return Object.assign({lane: li, name: name, at: L.pt(best.c.pos, li), cands: cands}, best.c);
 }
@@ -5394,7 +5902,7 @@ $('#ggCopy').addEventListener('click', async () => {
     document.execCommand('copy');
     ta.remove();
   }
-  toast('머메이드 코드를 복사했습니다');
+  toast(__('머메이드 코드를 복사했습니다'));
 });
 document.addEventListener('keydown', e => {
   if($('#gg').hidden) return;
@@ -5421,7 +5929,7 @@ function makeGitFigure(model){
   const f = document.createElement('figure');
   f.className = 'dg-block';
   f.contentEditable = 'false';
-  f.title = '클릭해서 깃 그래프 수정';
+  f.title = __('클릭해서 깃 그래프 수정');
   f.innerHTML = FIG_HTML;
   setGitFigure(f, model);
   return f;
@@ -5432,7 +5940,7 @@ function openGit(fig){
     try{ model = gitClean(JSON.parse(fig.dataset.gitModel)); }catch(e){ model = null; }
     if(!model){ openCode(fig); return; }
   }else{
-    model = gitKeys({dir: 'LR', items: [{t: 'commit', b: 'main', id: '처음', tag: '', type: 'NORMAL'}]});
+    model = gitKeys({dir: 'LR', items: [{t: 'commit', b: 'main', id: __('처음'), tag: '', type: 'NORMAL'}]});
   }
   G.target = fig || null;
   G.model = model;
@@ -5467,19 +5975,19 @@ $('#ggOk').addEventListener('click', () => {
    ========================================================= */
 function sampleDoc(){
   ed.innerHTML =
-    '<h1>프로젝트 이름</h1>' +
-    '<p>위쪽 도구로 <b>굵게</b>, <i>기울임</i>, 목록, 표를 넣고 <b>다이어그램 삽입</b>으로 그림을 그려 보세요.</p>' +
-    '<h2>진행 순서</h2>';
+    __('<h1>프로젝트 이름</h1>') +
+    __('<p>위쪽 도구로 <b>굵게</b>, <i>기울임</i>, 목록, 표를 넣고 <b>다이어그램 삽입</b>으로 그림을 그려 보세요.</p>') +
+    __('<h2>진행 순서</h2>');
   const model = {mode:'flow', dir:'TB', hold:true, seq:10, nodes:[
-    {id:'n1', shape:'stadium',  text:'시작',         cx:240, cy:40,  fill:'#16a34a'},
-    {id:'n2', shape:'diamond',  text:'그림 필요?',   cx:240, cy:175, fill:'#fef08a'},
-    {id:'n3', shape:'rect',     text:'도형 그리기',  cx:80,  cy:330, pw:1},
-    {id:'n4', shape:'rect',     text:'글로 작성',    cx:400, cy:330},
-    {id:'n5', shape:'cylinder', text:'README\n저장', cx:240, cy:470, stroke:'#7c3aed'}
+    {id:'n1', shape:'stadium',  text:__('시작'),         cx:240, cy:40,  fill:'#16a34a'},
+    {id:'n2', shape:'diamond',  text:__('그림 필요?'),   cx:240, cy:175, fill:'#fef08a'},
+    {id:'n3', shape:'rect',     text:__('도형 그리기'),  cx:80,  cy:330, pw:1},
+    {id:'n4', shape:'rect',     text:__('글로 작성'),    cx:400, cy:330},
+    {id:'n5', shape:'cylinder', text:__('README\n저장'), cx:240, cy:470, stroke:'#7c3aed'}
   ], edges:[
     {id:'e6',  a:'n1', b:'n2', kind:'arrow', text:''},
-    {id:'e7',  a:'n2', b:'n3', kind:'arrow', text:'예'},
-    {id:'e8',  a:'n2', b:'n4', kind:'arrow', text:'아니오'},
+    {id:'e7',  a:'n2', b:'n3', kind:'arrow', text:__('예')},
+    {id:'e8',  a:'n2', b:'n4', kind:'arrow', text:__('아니오')},
     {id:'e9',  a:'n3', b:'n5', kind:'arrow', text:''},
     {id:'e10', a:'n4', b:'n5', kind:'arrow', text:''}
   ]};
@@ -5492,7 +6000,7 @@ function sampleDoc(){
   ed.appendChild(makeFigure(model));
   const ul = document.createElement('ul');
   ul.className = 'task';
-  ul.innerHTML = '<li><input type="checkbox" contenteditable="false" checked>문서 뼈대 잡기</li><li><input type="checkbox" contenteditable="false">다이어그램 다듬기</li>';
+  ul.innerHTML = __('<li><input type="checkbox" contenteditable="false" checked>문서 뼈대 잡기</li><li><input type="checkbox" contenteditable="false">다이어그램 다듬기</li>');
   ed.appendChild(ul);
 }
 function watchDock(){
@@ -5532,25 +6040,25 @@ function canaryList(){
   const flowN = (i, shape, c, r, extra) => Object.assign({id: 'n' + i, shape: shape, text: '글자 ' + i, x: 20 + c * 190, y: 20 + r * 120, w: 100, h: 54}, extra || {});
   const E = (i, a, b, kind, text) => ({id: 'e' + i, a: 'n' + a, b: 'n' + b, kind: kind, text: text || ''});
   /* 격자 배치 */
-  dg('격자 배치: 도형 ' + plain.length + '종', {mode: 'grid', nodes: plain.map((k, i) => gridN(i + 1, k, i % 4, Math.floor(i / 4), i === 1 ? {text: '두 줄\n글자'} : null)), edges: []});
-  dg('격자 배치: 선 ' + kinds.length + '종과 선 위의 글자', {mode: 'grid',
+  dg(__('격자 배치: 도형 {0}종', plain.length), {mode: 'grid', nodes: plain.map((k, i) => gridN(i + 1, k, i % 4, Math.floor(i / 4), i === 1 ? {text: '두 줄\n글자'} : null)), edges: []});
+  dg(__('격자 배치: 선 {0}종과 선 위의 글자', kinds.length), {mode: 'grid',
     nodes: kinds.concat(kinds).map((k, i) => gridN(i + 1, 'rect', i % kinds.length, i < kinds.length ? 0 : 2)).concat([gridN(90, 'rect', 0, 4), gridN(91, 'rect', 2, 4)]),
     edges: kinds.map((k, i) => E(i + 1, i + 1, i + 1 + kinds.length, k, i % 2 ? '글자' : '')).concat([E(80, 90, 91, 'arrow', '옆으로')])});
-  dg('격자 배치: 마름모에 선 잇기', {mode: 'grid', nodes: [gridN(1, 'rect', 0, 0), gridN(2, 'diamond', 1, 1), gridN(3, 'rect', 0, 2), gridN(4, 'diamond', 2, 2)],
+  dg(__('격자 배치: 마름모에 선 잇기'), {mode: 'grid', nodes: [gridN(1, 'rect', 0, 0), gridN(2, 'diamond', 1, 1), gridN(3, 'rect', 0, 2), gridN(4, 'diamond', 2, 2)],
     edges: [E(1, 1, 2, 'arrow'), E(2, 2, 3, 'line', '예'), E(3, 2, 4, 'both')]});
-  dg('격자 배치: 도형마다 선 잇기', {mode: 'grid',
+  dg(__('격자 배치: 도형마다 선 잇기'), {mode: 'grid',
     nodes: [gridN(1, 'rect', 0, 0)].concat(plain.filter(k => k !== 'diamond').map((k, i) => gridN(i + 2, k, 1 + i % 3, Math.floor(i / 3)))),
     edges: plain.filter(k => k !== 'diamond').map((k, i) => E(i + 1, 1, i + 2, kinds[i % kinds.length]))});
-  dg('격자 배치: 폭 늘리기와 색', {mode: 'grid', nodes: [gridN(1, 'rect', 0, 0, {span: 3, fill: '#2563eb'}), gridN(2, 'round', 0, 1, {span: 2, stroke: '#dc2626', color: '#7c3aed'}), gridN(3, 'hexagon', 2, 1, {fill: '#fef08a'})], edges: [E(1, 1, 2, 'arrow')]});
+  dg(__('격자 배치: 폭 늘리기와 색'), {mode: 'grid', nodes: [gridN(1, 'rect', 0, 0, {span: 3, fill: '#2563eb'}), gridN(2, 'round', 0, 1, {span: 2, stroke: '#dc2626', color: '#7c3aed'}), gridN(3, 'hexagon', 2, 1, {fill: '#fef08a'})], edges: [E(1, 1, 2, 'arrow')]});
   /* 자동 정리 */
-  dg('자동 정리: 도형 ' + plain.length + '종', {mode: 'flow', nodes: plain.map((k, i) => flowN(i + 1, k, i % 4, Math.floor(i / 4), i === 1 ? {text: '두 줄\n글자'} : null)), edges: plain.slice(1).map((k, i) => E(i + 1, i + 1, i + 2, 'arrow'))});
-  if(tri.length) dg('자동 정리: 삼각형·역삼각형', {mode: 'flow', nodes: tri.map((k, i) => flowN(i + 1, k, i, 0)).concat([flowN(9, 'rect', 0, 1)]), edges: tri.map((k, i) => E(i + 1, i + 1, 9, 'arrow'))});
-  dg('자동 정리: 선 ' + kinds.length + '종과 선 위의 글자', {mode: 'flow', nodes: kinds.concat(kinds).map((k, i) => flowN(i + 1, 'rect', i % kinds.length, i < kinds.length ? 0 : 1)),
+  dg(__('자동 정리: 도형 {0}종', plain.length), {mode: 'flow', nodes: plain.map((k, i) => flowN(i + 1, k, i % 4, Math.floor(i / 4), i === 1 ? {text: '두 줄\n글자'} : null)), edges: plain.slice(1).map((k, i) => E(i + 1, i + 1, i + 2, 'arrow'))});
+  if(tri.length) dg(__('자동 정리: 삼각형·역삼각형'), {mode: 'flow', nodes: tri.map((k, i) => flowN(i + 1, k, i, 0)).concat([flowN(9, 'rect', 0, 1)]), edges: tri.map((k, i) => E(i + 1, i + 1, 9, 'arrow'))});
+  dg(__('자동 정리: 선 {0}종과 선 위의 글자', kinds.length), {mode: 'flow', nodes: kinds.concat(kinds).map((k, i) => flowN(i + 1, 'rect', i % kinds.length, i < kinds.length ? 0 : 1)),
     edges: kinds.map((k, i) => E(i + 1, i + 1, i + 1 + kinds.length, k, i % 2 ? '글자' : ''))});
-  dg('자동 정리: 크기 조절과 색', {mode: 'flow', nodes: [flowN(1, 'rect', 0, 0, {pw: 3, ph: 2, fill: '#16a34a'}), flowN(2, 'diamond', 0, 1, {pw: 2, ph: 1, stroke: '#dc2626', color: '#2563eb'}), flowN(3, 'cylinder', 1, 1, {ph: 2, fill: '#fef08a'})], edges: [E(1, 1, 2, 'arrow'), E(2, 2, 3, 'arrow')]});
-  dg('자동 정리: 위치 유지', {mode: 'flow', hold: true, nodes: [flowN(1, 'stadium', 1, 0), flowN(2, 'diamond', 1, 1), flowN(3, 'rect', 0, 2), flowN(4, 'rect', 2, 2), flowN(5, 'cylinder', 1, 3)],
+  dg(__('자동 정리: 크기 조절과 색'), {mode: 'flow', nodes: [flowN(1, 'rect', 0, 0, {pw: 3, ph: 2, fill: '#16a34a'}), flowN(2, 'diamond', 0, 1, {pw: 2, ph: 1, stroke: '#dc2626', color: '#2563eb'}), flowN(3, 'cylinder', 1, 1, {ph: 2, fill: '#fef08a'})], edges: [E(1, 1, 2, 'arrow'), E(2, 2, 3, 'arrow')]});
+  dg(__('자동 정리: 위치 유지'), {mode: 'flow', hold: true, nodes: [flowN(1, 'stadium', 1, 0), flowN(2, 'diamond', 1, 1), flowN(3, 'rect', 0, 2), flowN(4, 'rect', 2, 2), flowN(5, 'cylinder', 1, 3)],
     edges: [E(1, 1, 2, 'arrow'), E(2, 2, 3, 'arrow', '예'), E(3, 2, 4, 'arrow', '아니오'), E(4, 3, 5, 'arrow'), E(5, 4, 5, 'line')]});
-  dg('자동 정리: 가로 방향', {mode: 'flow', dir: 'LR', nodes: [flowN(1, 'rect', 0, 0), flowN(2, 'round', 1, 0), flowN(3, 'circle', 2, 0)], edges: [E(1, 1, 2, 'arrow'), E(2, 2, 3, 'thick')]});
+  dg(__('자동 정리: 가로 방향'), {mode: 'flow', dir: 'LR', nodes: [flowN(1, 'rect', 0, 0), flowN(2, 'round', 1, 0), flowN(3, 'circle', 2, 0)], edges: [E(1, 1, 2, 'arrow'), E(2, 2, 3, 'thick')]});
   /* 깃 그래프 */
   const git = (name, model) => {
     try{
@@ -5559,20 +6067,20 @@ function canaryList(){
     }catch(e){ out.push({name: name, code: '', broken: String(e && e.message || e)}); }
   };
   const C = (b, id, extra) => Object.assign({t: 'commit', b: b, id: id, tag: '', type: 'NORMAL'}, extra || {});
-  git('깃 그래프: 갈라내기·병합·태그·커밋 모양', {dir: 'LR', items: [C('main', '처음'), {t: 'branch', name: 'dev', from: 'main'}, C('dev', '작업', {type: 'HIGHLIGHT'}), C('dev', '되돌림', {type: 'REVERSE'}),
+  git(__('깃 그래프: 갈라내기·병합·태그·커밋 모양'), {dir: 'LR', items: [C('main', '처음'), {t: 'branch', name: 'dev', from: 'main'}, C('dev', '작업', {type: 'HIGHLIGHT'}), C('dev', '되돌림', {type: 'REVERSE'}),
     C('main', '문서', {tag: 'v0.9'}), {t: 'merge', b: 'main', src: 'dev', id: '합치기', tag: 'v1.0', type: 'NORMAL'}]});
-  git('깃 그래프: 이어지지 않은 브랜치와 줄 순서', {dir: 'LR', items: [{t: 'branch', name: 'solo', from: 'main', order: 2}, C('main', 'a'), {t: 'branch', name: '한글-브랜치', from: 'main', order: 1}, C('한글-브랜치', 'x'), C('solo', 's'), C('main', 'b')]});
-  git('깃 그래프: 브랜치 색', {dir: 'LR', colors: {main: '#16a34a', dev: '#dc2626'}, items: [C('main', 'a'), {t: 'branch', name: 'dev', from: 'main'}, C('dev', 'x'), C('main', 'b')]});
-  git('깃 그래프: 세로 방향', {dir: 'TB', items: [C('main', 'a'), {t: 'branch', name: 'dev', from: 'main'}, C('dev', 'x'), {t: 'merge', b: 'main', src: 'dev', id: 'm', tag: '', type: 'NORMAL'}]});
-  git('깃 그래프: 아래에서 위 방향', {dir: 'BT', items: [C('main', 'a'), {t: 'branch', name: 'dev', from: 'main'}, C('dev', 'x'), C('main', 'b')]});
-  git('깃 그래프: 체리픽', {dir: 'LR', items: [C('main', 'a'), {t: 'branch', name: 'dev', from: 'main'}, C('dev', 'x'), C('main', 'b'), {t: 'cherry', b: 'main', ref: 'x', tag: ''}]});
+  git(__('깃 그래프: 이어지지 않은 브랜치와 줄 순서'), {dir: 'LR', items: [{t: 'branch', name: 'solo', from: 'main', order: 2}, C('main', 'a'), {t: 'branch', name: '한글-브랜치', from: 'main', order: 1}, C('한글-브랜치', 'x'), C('solo', 's'), C('main', 'b')]});
+  git(__('깃 그래프: 브랜치 색'), {dir: 'LR', colors: {main: '#16a34a', dev: '#dc2626'}, items: [C('main', 'a'), {t: 'branch', name: 'dev', from: 'main'}, C('dev', 'x'), C('main', 'b')]});
+  git(__('깃 그래프: 세로 방향'), {dir: 'TB', items: [C('main', 'a'), {t: 'branch', name: 'dev', from: 'main'}, C('dev', 'x'), {t: 'merge', b: 'main', src: 'dev', id: 'm', tag: '', type: 'NORMAL'}]});
+  git(__('깃 그래프: 아래에서 위 방향'), {dir: 'BT', items: [C('main', 'a'), {t: 'branch', name: 'dev', from: 'main'}, C('dev', 'x'), C('main', 'b')]});
+  git(__('깃 그래프: 체리픽'), {dir: 'LR', items: [C('main', 'a'), {t: 'branch', name: 'dev', from: 'main'}, C('dev', 'x'), C('main', 'b'), {t: 'cherry', b: 'main', ref: 'x', tag: ''}]});
   return out;
 }
 /* 보이지 않는 틀 안에서 지정한 버전의 머메이드로 시험 그림을 그려 봄 */
 function mmCanary(ver){
   return new Promise(resolve => {
     const tests = canaryList();
-    const broken = tests.filter(t => t.broken).map(t => ({name: t.name, msg: '코드를 만들지 못함: ' + t.broken}));
+    const broken = tests.filter(t => t.broken).map(t => ({name: t.name, msg: __('코드를 만들지 못함: ') + t.broken}));
     const run = tests.filter(t => !t.broken).map(t => ({name: t.name, code: t.code}));
     const fr = document.createElement('iframe');
     fr.setAttribute('sandbox', 'allow-scripts');
@@ -5590,13 +6098,13 @@ function mmCanary(ver){
       const d = e.data;
       if(e.source !== fr.contentWindow || !d || d.mdpaint !== 'canary') return;
       if(d.ready){ fr.contentWindow.postMessage({mdpaint: 'run', tests: run, opts: MM_OPTS}, '*'); return; }
-      if(!d.loaded){ finish({error: '새 버전 파일을 불러오지 못했습니다'}); return; }
+      if(!d.loaded){ finish({error: __('새 버전 파일을 불러오지 못했습니다')}); return; }
       const fails = broken.concat((Array.isArray(d.results) ? d.results : []).filter(x => x && !x.ok)
         .map(x => ({name: String(x.name).slice(0, 80), msg: String(x.msg || '').slice(0, 200)})));
       finish({fails: fails});
     };
     window.addEventListener('message', onMsg);
-    timer = setTimeout(() => finish({error: '점검이 끝나지 않았습니다 (시간 초과)'}), 90000);
+    timer = setTimeout(() => finish({error: __('점검이 끝나지 않았습니다 (시간 초과)')}), 90000);
     const inner = "(function(){var P=function(m){m.mdpaint='canary';parent.postMessage(m,'*');};" +
       "if(!window.mermaid){P({loaded:false});return;}" +
       "addEventListener('message',async function(e){var d=e.data;if(!d||d.mdpaint!=='run')return;" +
@@ -5614,11 +6122,11 @@ function mmChip(){
   const res = st.res && st.latest && st.res.ver === st.latest ? st.res : null;
   const newer = st.latest && verCmp(st.latest, MM_PIN) > 0;
   chip.classList.remove('warn', 'bad');
-  let text = '머메이드 ' + mmVer;
-  if(MM.busy) text = '머메이드 점검 중…';
-  else if(newer && res && res.fails && res.fails.length){ text = '머메이드 새 버전 ' + st.latest + ' · ' + res.fails.length + '가지 깨짐'; chip.classList.add('bad'); }
-  else if(newer){ text = '머메이드 새 버전 ' + st.latest + (res && res.fails ? ' · 점검 통과' : ''); chip.classList.add('warn'); }
-  else if(mmVer !== MM_PIN){ text = '머메이드 ' + mmVer + ' (기본 ' + MM_PIN + ' 아님)'; chip.classList.add('warn'); }
+  let text = __('머메이드 ') + mmVer;
+  if(MM.busy) text = __('머메이드 점검 중…');
+  else if(newer && res && res.fails && res.fails.length){ text = __('머메이드 새 버전 ') + st.latest + ' · ' + __('{0}가지 깨짐', res.fails.length); chip.classList.add('bad'); }
+  else if(newer){ text = __('머메이드 새 버전 ') + st.latest + (res && res.fails ? __(' · 점검 통과') : ''); chip.classList.add('warn'); }
+  else if(mmVer !== MM_PIN){ text = __('머메이드 ') + mmVer + __(' (기본 {0} 아님)', MM_PIN); chip.classList.add('warn'); }
   chip.textContent = text;
   if(MM.pop && !MM.pop.hidden) mmPopFill();
 }
@@ -5636,15 +6144,15 @@ async function mmWatch(force){
     const r = await fetch('https://registry.npmjs.org/mermaid/latest', {cache: 'no-store'});
     const j = await r.json();
     if(j && typeof j.version === 'string' && VER_RE.test(j.version)){ st.latest = j.version; st.t = Date.now(); st.fail = ''; }
-    else st.fail = '최신 버전 번호를 읽지 못했습니다';
-  }catch(e){ st.fail = '최신 버전을 확인하지 못했습니다 (인터넷 연결 확인)'; }
+    else st.fail = __('최신 버전 번호를 읽지 못했습니다');
+  }catch(e){ st.fail = __('최신 버전을 확인하지 못했습니다 (인터넷 연결 확인)'); }
   const newer = st.latest && verCmp(st.latest, MM_PIN) > 0;
   const target = newer ? st.latest : (force ? MM_PIN : '');
   if(target && (force || !st.res || st.res.ver !== target)){
     const before = st.res && st.res.ver === target && st.res.fails ? st.res.fails.length : -1;
     st.res = await mmCanary(target);
     if(newer && st.res.fails && st.res.fails.length && st.res.fails.length !== before)
-      toast('머메이드 새 버전 ' + target + '에서 그림 ' + st.res.fails.length + '가지가 그려지지 않습니다. 위쪽 "머메이드" 표시를 눌러 확인하세요');
+      toast(__('머메이드 새 버전 {0}에서 그림 {1}가지가 그려지지 않습니다. 위쪽 "머메이드" 표시를 눌러 확인하세요', target, st.res.fails.length));
   }
   try{ localStorage.setItem(MM_CHECK_KEY, JSON.stringify(st)); }catch(e){}
   MM.busy = false; mmChip();
@@ -5653,17 +6161,17 @@ function mmPopFill(){
   const st = MM.state || {}, res = st.res || null;
   const newer = st.latest && verCmp(st.latest, MM_PIN) > 0;
   const when = st.t ? new Date(st.t).toLocaleString() : '';
-  let h = '<h4>그림 미리보기 엔진 (머메이드)</h4><dl>' +
-    '<dt>지금 미리보기</dt><dd>' + esc(mmVer) + (mmVer === MM_PIN ? ' · 깃허브와 같은 버전으로 맞춰 둠' : ' · 기본값(' + esc(MM_PIN) + ')이 아님') + '</dd>' +
-    '<dt>최신 버전</dt><dd>' + (st.latest ? esc(st.latest) + (newer ? ' · 새 버전' : ' · 같음') : '확인 전') + (when ? ' <span style="font-weight:400;color:var(--muted)">(' + esc(when) + ' 확인)</span>' : '') + '</dd></dl>';
+  let h = __('<h4>그림 미리보기 엔진 (머메이드)</h4><dl>') +
+    __('<dt>지금 미리보기</dt><dd>') + esc(mmVer) + (mmVer === MM_PIN ? __(' · 깃허브와 같은 버전으로 맞춰 둠') : __(' · 기본값({0})이 아님', esc(MM_PIN))) + '</dd>' +
+    __('<dt>최신 버전</dt><dd>') + (st.latest ? esc(st.latest) + (newer ? __(' · 새 버전') : __(' · 같음')) : __('확인 전')) + (when ? ' <span style="font-weight:400;color:var(--muted)">(' + __('{0} 확인', esc(when)) + ')</span>' : '') + '</dd></dl>';
   if(st.fail) h += '<p>' + esc(st.fail) + '</p>';
-  if(MM.busy) h += '<p>점검하는 중입니다…</p>';
-  else if(res && res.error) h += '<p>' + esc(res.ver) + ' 점검 실패: ' + esc(res.error) + '</p>';
+  if(MM.busy) h += __('<p>점검하는 중입니다…</p>');
+  else if(res && res.error) h += '<p>' + esc(res.ver) + __(' 점검 실패: ') + esc(res.error) + '</p>';
   else if(res && res.fails){
     const bad = {};
     res.fails.forEach(f => { bad[f.name] = f.msg; });
-    h += '<p><b>' + esc(res.ver) + '</b> 버전으로 이 편집기가 만드는 그림 ' + res.total + '가지를 그려 본 결과: ' +
-      (res.fails.length ? '<b style="color:#b42318">' + res.fails.length + '가지가 그려지지 않습니다.</b>' : '<b style="color:var(--accent)">모두 그려집니다.</b>') + '</p><ul>';
+    h += '<p>' + __('<b>{0}</b> 버전으로 이 편집기가 만드는 그림 {1}가지를 그려 본 결과: ', esc(res.ver), res.total) +
+      (res.fails.length ? '<b style="color:#b42318">' + __('{0}가지가 그려지지 않습니다.', res.fails.length) + '</b>' : '<b style="color:var(--accent)">' + __('모두 그려집니다.') + '</b>') + '</p><ul>';
     let names = [];
     try{ names = canaryList().map(t => t.name); }catch(e){}
     res.fails.forEach(f => { if(names.indexOf(f.name) < 0) names.push(f.name); });
@@ -5672,11 +6180,11 @@ function mmPopFill(){
     });
     h += '</ul>';
   }
-  if(newer) h += '<p>깃허브가 새 버전으로 올렸는지는 여기서 알 수 없습니다. 깃허브 README에 <code>```mermaid</code> / <code>info</code> / <code>```</code> 세 줄을 넣으면 깃허브가 쓰는 버전이 표시됩니다.</p>';
-  else h += '<p>하루에 한 번 새 버전이 나왔는지 확인하고, 나오면 그 버전으로 그림이 깨지는지 미리 점검합니다. 그려지는지만 확인하며 모양이 조금 달라지는 것까지는 잡지 못합니다.</p>';
-  h += '<div class="acts"><button class="btn" data-mm="check"' + (MM.busy ? ' disabled' : '') + '>지금 점검</button>';
-  if(newer && mmVer !== st.latest) h += '<button class="btn" data-mm="use" data-v="' + esc(st.latest) + '">미리보기를 ' + esc(st.latest) + '(으)로 보기</button>';
-  if(mmVer !== MM_PIN) h += '<button class="btn" data-mm="use" data-v="">미리보기를 기본(' + esc(MM_PIN) + ')으로 되돌리기</button>';
+  if(newer) h += __('<p>깃허브가 새 버전으로 올렸는지는 여기서 알 수 없습니다. 깃허브 README에 <code>```mermaid</code> / <code>info</code> / <code>```</code> 세 줄을 넣으면 깃허브가 쓰는 버전이 표시됩니다.</p>');
+  else h += __('<p>하루에 한 번 새 버전이 나왔는지 확인하고, 나오면 그 버전으로 그림이 깨지는지 미리 점검합니다. 그려지는지만 확인하며 모양이 조금 달라지는 것까지는 잡지 못합니다.</p>');
+  h += '<div class="acts"><button class="btn" data-mm="check"' + (MM.busy ? ' disabled' : '') + __('>지금 점검</button>');
+  if(newer && mmVer !== st.latest) h += '<button class="btn" data-mm="use" data-v="' + esc(st.latest) + '">' + __('미리보기를 {0}(으)로 보기', esc(st.latest)) + '</button>';
+  if(mmVer !== MM_PIN) h += '<button class="btn" data-mm="use" data-v="">' + __('미리보기를 기본({0})으로 되돌리기', esc(MM_PIN)) + '</button>';
   h += '</div>';
   MM.pop.innerHTML = h;
 }
@@ -5753,6 +6261,43 @@ function init(){
 }
 init();
 mmChip();
+
+/* 언어 고르기 (오른쪽 위 KR / EN). 고르면 손잡이가 먼저 옮겨 가고, 문서를 보관한 뒤 화면을 다시 불러온다 */
+(function(){
+  const sw = $('#langSw');
+  if(!sw) return;
+  sw.querySelectorAll('[data-lang]').forEach(b => b.setAttribute('aria-checked', b.dataset.lang === LANG ? 'true' : 'false'));
+  let going = false;
+  sw.addEventListener('click', e => {
+    const b = e.target.closest('[data-lang]');
+    if(!b || going || b.dataset.lang === LANG) return;
+    const to = b.dataset.lang;
+    going = true;
+    try{ codeFlush(); save(); tabsStoreNow(); }catch(err){}
+    let kept = true;
+    try{ localStorage.setItem('mdpaint.lang', to); }catch(err){ kept = false; }
+    /* 처음 예시 문서를 손대지 않았으면 지워서, 새 언어의 예시 문서가 나오게 함 */
+    try{
+      const only = T.docs.length === 1 ? T.docs[0] : null;
+      if(only && only.sample && only.sample === only.savedSig && !only.dirty){ T.frozen = true; clearTimeout(T.timer); localStorage.removeItem(TABS_KEY); }
+    }catch(err){}
+    /* 첫 화면을 이미 지나왔으면 다시 불러온 뒤에는 첫 화면을 건너뜀 */
+    try{ if(!document.getElementById('intro')) sessionStorage.setItem('mdpaint.skipintro', '1'); }catch(err){}
+    const root = document.documentElement;
+    root.classList.remove('lang-ko', 'lang-en'); root.classList.add('lang-' + to);
+    sw.querySelectorAll('[data-lang]').forEach(x => x.setAttribute('aria-checked', x.dataset.lang === to ? 'true' : 'false'));
+    setTimeout(() => {
+      let url = location.href;
+      try{
+        const u = new URL(location.href);
+        u.searchParams.delete('lang');
+        if(!kept) u.searchParams.set('lang', to);    /* 브라우저에 기억할 수 없으면 주소에 적어서 넘김 */
+        url = u.href;
+      }catch(err){}
+      if(url === location.href) location.reload(); else location.replace(url);
+    }, 240);
+  });
+})();
 /* 그림 엔진을 다 불러온 뒤, 화면이 한가할 때 새 버전 확인 */
 mmLoad.then(() => setTimeout(() => mmWatch(false), 1500));
 
